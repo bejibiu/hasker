@@ -1,6 +1,6 @@
 Hasker
 ==============
-Projet for trening. It's copy Stackoverflow with API
+Projet for trening. It's copy site Stackoverflow with API
 
 Requrements
 --------------
