@@ -5,8 +5,10 @@ def test_home_page(client):
         'logo',
         'search',
         'user_block',
-        'signin',
-        'regestry'
+        'log_in',
+        'sign_up',
+        'list_question',
+        'trending'
     ]
 
     res = (res.content).decode()

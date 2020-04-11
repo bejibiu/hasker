@@ -19,6 +19,5 @@ class TestHomePage:
         browser.get(home_page)
         assert "Hasker" in browser.title
         assert "Hasker" in browser.find_element_by_tag_name("h1").text
-        assert "questions" in browser.find_element_by_tag_name("h2").text
-        assert "no question" in browser.find_elements_by_id("list_question").text
-        assert browser.find_elements_by_name("search")
+        assert browser.find_elements_by_id("search")
+        assert "No question" in browser.find_element_by_id("list_question").text
