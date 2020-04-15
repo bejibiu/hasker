@@ -26,7 +26,8 @@
         </div>
         <div id="user_block">
             <a class="btn btn-outline-success" id="log_in">Log in</a>
-            <a class="btn btn-outline-success" id="sign_up">Sign up</a>
+            <a class="btn btn-outline-success" data-toggle="modal" data-target="#sign_up_modal" id="sign_up_btn">Sign
+                up</a>
         </div>
     </div>
     <div class="container-fluid">
@@ -66,7 +67,33 @@
 
     </div>
     </div>
-
+    <!-- Modal registration -->
+    <div class="modal fade" id="sign_up_modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Sign Up</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="form_sign_up" method="POST" action="/account/login/">
+                    <div class="modal-body">
+                        {% csrf_token %}
+                        <input type="email" class="form-control" placeholder="email" name="email" required>
+                        <input type="text" class="form-control" placeholder="text" name="text" required">
+                        <input type="password" class="form-control" placeholder="password" name="password" required>
+                        <input type="passwords" class="form-control" placeholder="passwords" name="passwords-repeater"
+                            required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                        <input type="submit" name="send_signup_form" class="btn btn-outline-success" value="save">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
