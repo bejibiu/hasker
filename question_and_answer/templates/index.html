@@ -81,10 +81,11 @@
                     <div class="modal-body">
                         {% csrf_token %}
                         <input type="email" class="form-control" placeholder="email" name="email" required>
-                        <input type="text" class="form-control" placeholder="text" name="text" required">
-                        <input type="password" class="form-control" placeholder="password" name="password" required>
-                        <input type="passwords" class="form-control" placeholder="passwords" name="passwords-repeater"
+                        <input type="text" class="form-control" placeholder="text" name="login" required>
+                        <input type="password" class="form-control" placeholder="password" name="password1" required>
+                        <input type="password" class="form-control" placeholder="passwords" name="password2"
                             required>
+                        <input type="file" class="form-control" name="avatar">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>

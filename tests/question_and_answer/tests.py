@@ -11,7 +11,7 @@ def test_home_page(client):
         'trending'
     ]
 
-    res = (res.content).decode()
+    res = res.content.decode()
 
     for element in elements_by_id_on_home_page:
         assert element in res

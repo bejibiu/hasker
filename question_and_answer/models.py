@@ -1,12 +1,12 @@
 from django.db import models
 from django.conf import settings
 
-MIIDLE_LENGTH = 200
+MIDDLE_LENGTH = 200
 SMALL_LENGTH = 50
 
 
 class Tags(models.Model):
-    lable = models.CharField(max_length=SMALL_LENGTH)
+    label = models.CharField(max_length=SMALL_LENGTH)
 
 
 class Question(models.Model):
@@ -17,7 +17,7 @@ class Question(models.Model):
     tags = models.ManyToManyField(Tags)
 
 
-class Asnwer(models.Model):
+class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     text = models.TextField()
     date = models.DateTimeField(auto_now=True)
