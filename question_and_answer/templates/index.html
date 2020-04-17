@@ -27,7 +27,7 @@
         <div id="user_block">
             {% if user.is_authenticated %}
             <a class="btn btn-outline-success" id="profile">{{user.username}}</a>
-            <a class="btn btn-outline-success" id="logout">Log out</a>
+            <a class="btn btn-outline-success" href="{% url 'logout' %}" id="logout">Log out</a>
             {% else %}
             <a class="btn btn-outline-success" data-toggle="modal" data-target="#login_modal" id="login_btn">
                 Log in
