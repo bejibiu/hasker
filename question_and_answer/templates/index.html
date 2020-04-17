@@ -25,18 +25,25 @@
             </form>
         </div>
         <div id="user_block">
+            {% if user.is_authenticated %}
+            <a class="btn btn-outline-success" id="profile">{{user.username}}</a>
+            <a class="btn btn-outline-success" id="logout">Log out</a>
+            {% else %}
             <a class="btn btn-outline-success" id="log_in">Log in</a>
             <a class="btn btn-outline-success" data-toggle="modal" data-target="#sign_up_modal" id="sign_up_btn">Sign
                 up</a>
+            {% endif %}
         </div>
     </div>
     <div class="container-fluid">
     {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
+        <div class="alert-success">
+            <ul class="messages ">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
     {% endif %}
         <dir class="row">
             <div class="col-9" id="list_question">
@@ -87,7 +94,7 @@
                     <div class="modal-body">
                         {% csrf_token %}
                         <input type="email" class="form-control" placeholder="email" name="email" required>
-                        <input type="text" class="form-control" placeholder="text" name="login" required>
+                        <input type="text" class="form-control" placeholder="username" name="username" required>
                         <input type="password" class="form-control" placeholder="password" name="password1" required>
                         <input type="password" class="form-control" placeholder="passwords" name="password2"
                             required>
