@@ -10,8 +10,8 @@ def browser():
 
 
 @pytest.fixture
-def home_page(browser):
-    return browser.get("http://127.0.0.1:8000")
+def home_page(browser, live_server):
+    return browser.get(live_server.url)
 
 
 class TestHomePage:
@@ -25,11 +25,10 @@ class TestHomePage:
         btn_sign_up = browser.find_element_by_id("sign_up_btn")
         btn_sign_up.click()
 
-        assert not browser.find_element_by_name("send_signup_form").is_enabled()
         browser.find_element_by_name("login").send_keys("new_login")
         browser.find_element_by_name("email").send_keys("new_user@mail.com")
-        browser.find_element_by_name("password").send_keys("new_user@mail.com")
-        browser.find_element_by_name("password-repeater").send_keys("new_user@mail.com")
+        browser.find_element_by_name("password1").send_keys("new_user@mail.com")
+        browser.find_element_by_name("password2").send_keys("new_user@mail.com")
         browser.find_element_by_name("send_signup_form").click()
 
         assert (

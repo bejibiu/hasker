@@ -1,5 +1,6 @@
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import resolve
+from django.contrib.auth.models import User
 import pytest
 
 from account.models import Account
@@ -31,6 +32,23 @@ def test_create_user_account_with_post(client, path_to_login, avatar):
     }
 
     client.post(path_to_login, data=data)
-    assert Account.objects.all().count() == 1
-    assert Account.objects.first().avatar
+    user = User.objects.select_related('account').first
+
+    assert User.objects.count() == 1
+    assert user.account.avatar.name
+
+
+@pytest.mark.django_db
+def test_create_user_account_with_post(client, path_to_login):
+    data = {
+        "email": "test@mail.com",
+        "username": "test",
+        "password1": "superPassword123",
+        "password2": "superPassword123",
+    }
+
+    client.post(path_to_login, data=data)
+    user = User.objects.select_related('account').first()
+    assert User.objects.count() == 1
+    assert not user.account.avatar.name
 

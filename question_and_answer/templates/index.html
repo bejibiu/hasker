@@ -31,6 +31,13 @@
         </div>
     </div>
     <div class="container-fluid">
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
         <dir class="row">
             <div class="col-9" id="list_question">
                 <p>No question</p>
@@ -65,7 +72,6 @@
             </div>
         </dir>
 
-    </div>
     </div>
     <!-- Modal registration -->
     <div class="modal fade" id="sign_up_modal" tabindex="-1" role="dialog">
