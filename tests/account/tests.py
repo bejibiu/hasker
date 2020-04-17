@@ -11,7 +11,7 @@ def avatar():
 
 def test_return_correct_resolve_path_registration():
     func = resolve("/account/registration/")
-    assert func.view_name == 'account.views.registration'
+    assert func.view_name == 'registration'
 
 
 @pytest.mark.django_db
@@ -45,3 +45,14 @@ def test_create_user_account_with_post(client):
     assert User.objects.count() == 1
     assert not user.account.avatar.name
 
+
+@pytest.mark.django_db
+def test_login_with_post(client, user):
+    data = {
+        "username": f"{user.username}",
+        "password": "very_Strong_password!@# Z",
+    }
+
+    res = client.post(reverse('login'), data=data)
+
+    assert res.status_code == 302

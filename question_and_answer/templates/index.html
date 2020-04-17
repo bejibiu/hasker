@@ -29,9 +29,12 @@
             <a class="btn btn-outline-success" id="profile">{{user.username}}</a>
             <a class="btn btn-outline-success" id="logout">Log out</a>
             {% else %}
-            <a class="btn btn-outline-success" id="log_in">Log in</a>
-            <a class="btn btn-outline-success" data-toggle="modal" data-target="#sign_up_modal" id="sign_up_btn">Sign
-                up</a>
+            <a class="btn btn-outline-success" data-toggle="modal" data-target="#login_modal" id="login_btn">
+                Log in
+            </a>
+            <a class="btn btn-outline-success" data-toggle="modal" data-target="#sign_up_modal" id="sign_up_btn">
+                Sign up
+            </a>
             {% endif %}
         </div>
     </div>
@@ -103,6 +106,30 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
                         <input type="submit" name="send_signup_form" class="btn btn-outline-success" value="save">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Modal login -->
+    <div class="modal fade" id="login_modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Sign In</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="form_login" method="POST" action="{% url 'login' %}">
+                    <div class="modal-body">
+                        {% csrf_token %}
+                        <input type="text" class="form-control" placeholder="username" id='login_username' name="username" required>
+                        <input type="password" class="form-control" placeholder="password" id='login_password' name="password" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                        <input type="submit" name="send_login_form" class="btn btn-outline-success" value="Log in">
                     </div>
                 </form>
             </div>

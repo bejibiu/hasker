@@ -37,7 +37,15 @@ class TestHomePage:
         )
         ### After sign up user already login and see button logout
         assert browser.find_element_by_id('logout')
-        browser.find_element_by_id('logout')
+        browser.find_element_by_id('logout').click()
 
+    def test_login(self, browser, home_page, user):
+        browser.find_element_by_id("login_btn").click()
 
+        browser.find_element_by_id("login_username").send_keys(user.username)
+        browser.find_element_by_id("login_password").send_keys('very_Strong_password!@# Z')
+
+        browser.find_element_by_name("send_login_form").click()
+        assert browser.find_element_by_id('logout')
+        browser.find_element_by_id('logout').click()
 
