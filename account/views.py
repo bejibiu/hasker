@@ -9,7 +9,7 @@ from .forms import AccountForm
 from .models import Account
 
 
-def login(request):
+def registration(request):
     if request.method == "POST":
         form = UserCreationForm(request.POST)
         form_account = AccountForm(request.POST, request.FILES)

@@ -25,13 +25,19 @@ class TestHomePage:
         btn_sign_up = browser.find_element_by_id("sign_up_btn")
         btn_sign_up.click()
 
-        browser.find_element_by_name("login").send_keys("new_login")
+        browser.find_element_by_name("username").send_keys("new_login")
         browser.find_element_by_name("email").send_keys("new_user@mail.com")
         browser.find_element_by_name("password1").send_keys("new_user@mail.com")
         browser.find_element_by_name("password2").send_keys("new_user@mail.com")
         browser.find_element_by_name("send_signup_form").click()
 
         assert (
-            "success sign up"
-            in browser.find_element_by_class_name("alert-success").text()
+                "success sign up"
+                in browser.find_element_by_class_name("alert-success").text
         )
+        ### After sign up user already login and see button logout
+        assert browser.find_element_by_id('logout')
+        browser.find_element_by_id('logout')
+
+
+
