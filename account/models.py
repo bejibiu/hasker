@@ -14,8 +14,3 @@ class Account(models.Model):
     avatar = models.FileField(upload_to=user_directory_path, null=True)
 
 
-@receiver(post_save, sender=User)
-def create_or_update_user_account(sender, instance, created, **kwargs):
-    if created:
-        Account.objects.create(user=instance)
-    instance.account.save()
