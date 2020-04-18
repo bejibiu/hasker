@@ -22,8 +22,8 @@ def registration(request):
                 account.user = user
                 logging.info(f'create avatar to user {user.email}')
             else:
-                account = Account.objects.create(user=user)
+                Account.objects.create(user=user)
             auth.login(request, user)
             messages.add_message(request, messages.SUCCESS, 'You success sign up')
-            return render(request, 'index.html')
-    return render(request, 'index.html')
+            return render(request, 'base.html')
+    return render(request, 'base.html')

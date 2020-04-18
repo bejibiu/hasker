@@ -1,11 +1,11 @@
 
-def test_home_page(client):
+def test_home_page_content(client):
     res = client.get('/')
     elements_by_id_on_home_page = [
         'logo',
         'search',
         'user_block',
-        'log_in',
+        'login',
         'sign_up',
         'list_question',
         'trending'
