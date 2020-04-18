@@ -1,5 +1,6 @@
 from selenium import webdriver
 import pytest
+from selenium.common.exceptions import NoSuchElementException
 
 
 @pytest.fixture(scope="class")
@@ -12,6 +13,20 @@ def browser():
 @pytest.fixture
 def home_page(browser, live_server):
     return browser.get(live_server.url)
+
+
+def func_login(browser, user):
+    try:
+        browser.find_element_by_id('logout').click()
+    except NoSuchElementException:
+        pass
+
+    browser.find_element_by_id("login_btn").click()
+
+    browser.find_element_by_id("login_username").send_keys(user.username)
+    browser.find_element_by_id("login_password").send_keys('very_Strong_password!@# Z')
+
+    browser.find_element_by_name("send_login_form").click()
 
 
 class TestHomePage:
@@ -30,7 +45,6 @@ class TestHomePage:
         browser.find_element_by_name("password1").send_keys("new_user@mail.com")
         browser.find_element_by_name("password2").send_keys("new_user@mail.com")
         browser.find_element_by_name("send_signup_form").click()
-
         assert (
                 "success sign up"
                 in browser.find_element_by_class_name("alert-success").text
@@ -50,16 +64,9 @@ class TestHomePage:
         browser.find_element_by_id('logout').click()
 
     def test_logout(self, browser, home_page, user):
-        browser.find_element_by_id("login_btn").click()
-
-        browser.find_element_by_id("login_username").send_keys(user.username)
-        browser.find_element_by_id("login_password").send_keys('very_Strong_password!@# Z')
-
-        browser.find_element_by_name("send_login_form").click()
-
+        func_login(browser, user)
         assert browser.find_element_by_id('logout')
+
         browser.find_element_by_id('logout').click()
+
         assert browser.find_element_by_id('login_btn')
-
-
-
