@@ -71,7 +71,7 @@ class TestHomePage:
         ### After sign up user already login and see button logout
         assert "new_login" == browser.find_element_by_id('profile').text
         assert browser.find_element_by_id('logout')
-        assert browser.find_element_by_id('avatar')
+        assert browser.find_element_by_class_name('avatar')
 
     def test_login(self, browser, home_page, user):
         browser.find_element_by_id("login_btn").click()

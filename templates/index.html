@@ -46,7 +46,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="form_sign_up" method="POST" action="{% url 'registration' %}">
+            <form id="form_sign_up" method="POST" enctype="multipart/form-data"  action="{% url 'registration' %}">
                 <div class="modal-body">
                     {% csrf_token %}
                     <input type="email" class="form-control" placeholder="email" name="email" required>
