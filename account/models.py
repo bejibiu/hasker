@@ -14,6 +14,8 @@ class Account(models.Model):
     avatar = models.FileField(upload_to=user_directory_path, null=True)
     date_of_create = models.DateTimeField(auto_now_add=True)
 
+#     TODO: if update avatar. delete old avatar.
+
 
 @receiver(post_save, sender=User)
 def create_account_for_new_user(sender, instance, created, **kwargs):
