@@ -1,3 +1,6 @@
+from base64 import b64decode
+
+from django.utils.baseconv import base64
 from selenium import webdriver
 import pytest
 from selenium.common.exceptions import NoSuchElementException
@@ -22,6 +25,14 @@ def profile_page(browser, live_server, user):
     return browser.get(live_server.url + "/account/settings/")
 
 
+@pytest.fixture
+def avatar_img(tmpdir):
+    avatar_path = tmpdir.mkdir("avatar").join("avatar.gif")
+    with open(avatar_path, 'wb')as f:
+        f.write(b64decode(b"R0lGODlhEAAQANU/APXRACIeJyUhLEM8T/zyAPvtAPrpAPnmAPjiAPjfADw1RvPKAPPIAFBHXv30ACsmMvXUAO+5AB0aI/33APjdAPHDAEU+UTgyQllPaQsJDR8cJTUvPvLHAP75AEhAVPC+ADYwP/fbAE5FW/78ADMuPPHBAFtQaf76AH5wlBcVG5mJtG1hgExDWY19pf/9APbXAE9GXUA5S/TNAPbYAP34APjgAC8qN1VMZPPLAP79AElBVktCVzErOVFIX////////yH5BAEAAD8ALAAAAAAQABAAAAanwJ/w1ysOj8jeiEboIZ89V8fhfB6jJ6r1OupUrSqVL3eaFBsNmIjlGfxaLV9nQigcaqG1Tra4oFA+DnUGCBQYEAAWCxwkKys+BQYHhRg9ADI4CiA2JiY+kwkhN4gWMRwcJQ8eHj6hMxA7AzgMHBs8Dz8gID4viAMLDCAbJSUfAj8CAj6XOBckxB8PyUIpKT4xFxXFyRHdGkIZGT5C0gEaGhLpQ+FbT0EAOw=="))
+    return avatar_path
+
+
 def func_login(browser, user):
     try:
         browser.find_element_by_id('logout').click()
@@ -43,7 +54,7 @@ class TestHomePage:
         assert browser.find_elements_by_id("search")
         assert "No question" in browser.find_element_by_id("list_question").text
 
-    def test_registration(self, browser, home_page):
+    def test_registration(self, browser, home_page, avatar_img):
         btn_sign_up = browser.find_element_by_id("sign_up_btn")
         btn_sign_up.click()
 
@@ -51,14 +62,16 @@ class TestHomePage:
         browser.find_element_by_name("email").send_keys("new_user@mail.com")
         browser.find_element_by_name("password1").send_keys("new_user@mail.com")
         browser.find_element_by_name("password2").send_keys("new_user@mail.com")
+        browser.find_element_by_name("avatar").send_keys(avatar_img.strpath)
         browser.find_element_by_name("send_signup_form").click()
         assert (
                 "success sign up"
                 in browser.find_element_by_class_name("alert-success").text
         )
         ### After sign up user already login and see button logout
+        assert "new_login" == browser.find_element_by_id('profile').text
         assert browser.find_element_by_id('logout')
-        browser.find_element_by_id('logout').click()
+        assert browser.find_element_by_id('avatar')
 
     def test_login(self, browser, home_page, user):
         browser.find_element_by_id("login_btn").click()
