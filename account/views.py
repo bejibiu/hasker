@@ -15,10 +15,10 @@ from .models import Account
 def registration(request):
     if request.method == "POST":
         form = UserCreationForm(request.POST)
-        form_account = AccountForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save()
             logging.info(f"create user with email={user.email}")
+            form_account = AccountForm(request.POST, request.FILES, instance=user.account)
             if form_account.is_valid():
                 account = form_account.save(commit=False)
                 account.user = user

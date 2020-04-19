@@ -88,6 +88,6 @@ class TestProfilePage:
         browser.find_element_by_name('email').send_keys('newemail@test.com')
         browser.find_element_by_id('send_settings_form_btn').click()
         assert (
-                "success update"
+                "Success update"
                 in browser.find_element_by_class_name("alert-success").text
         )
