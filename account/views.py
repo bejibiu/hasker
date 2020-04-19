@@ -5,7 +5,7 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import DetailView
 
 from .forms import AccountForm, UserChangeFormSimple
@@ -36,7 +36,7 @@ def registration(request):
 def settings(request):
     if request.method == "POST":
         user_form = UserChangeFormSimple(request.POST, instance=request.user)
-        account_form = AccountForm(request.POST, request.FILES)
+        account_form = AccountForm(request.POST, request.FILES, instance=request.user.account)
         if user_form.is_valid() and account_form.is_valid():
             new_email = user_form.cleaned_data['email']
             logging.info(f"user {request.user} change email from {request.user.email } to {new_email}")

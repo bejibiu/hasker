@@ -87,4 +87,7 @@ class TestProfilePage:
     def test_change_email(self, browser, profile_page):
         browser.find_element_by_name('email').send_keys('newemail@test.com')
         browser.find_element_by_id('send_settings_form_btn').click()
-        assert "newemail@test.com" in browser.find_element_by_name('email').text
+        assert (
+                "success update"
+                in browser.find_element_by_class_name("alert-success").text
+        )

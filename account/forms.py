@@ -21,4 +21,4 @@ class UserChangeFormSimple(UserChangeForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         del self.fields['password']
-        self.fields['username'].widget.attrs.update({'disabled': 'disabled'})
+        self.fields['username'].widget.attrs.update({'readonly': 'readonly'})

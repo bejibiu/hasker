@@ -19,7 +19,7 @@ from django.urls import path, include
 from question_and_answer.views import home_page
 
 urlpatterns = [
-    path('', home_page),
+    path('', home_page, name='home'),
     path('account/', include('account.urls')),
     path('admin/', admin.site.urls),
 ]
