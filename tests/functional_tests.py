@@ -17,6 +17,11 @@ def browser():
 def home_page(browser, live_server):
     return browser.get(live_server.url)
 
+@pytest.fixture
+def auth_session(browser, live_server, user):
+    page = browser.get(live_server.url)
+    func_login(browser, user)
+    return page
 
 @pytest.fixture
 def profile_page(browser, live_server, user):
@@ -104,3 +109,24 @@ class TestProfilePage:
                 "Success update"
                 in browser.find_element_by_class_name("alert-success").text
         )
+
+
+class TestHomePageQuestion:
+    def test_not_available_button_ask_if_user_not_auth(self, browser, home_page, user):
+        assert not browser.find_element_by_id('ask_btn')
+        func_login(browser, user)
+        assert browser.find_element_by_id('ask_btn')
+
+    def test_save_ask_question(self, browser, auth_session):
+        browser.find_element_by_id('ask_btn').click()
+
+        browser.find_element_by_name("title").send_keys("New Question")
+        browser.find_element_by_name("text").send_keys("This is text question?")
+        browser.find_element_by_name("tags").send_keys("Absurd")
+        browser.find_element_by_name("send_ask_btn").click()
+
+        assert (
+                "Ask was added"
+                in browser.find_element_by_class_name("alert-success").text
+        )
+        browser.find_element_by_class_name('question')

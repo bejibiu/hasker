@@ -6,6 +6,9 @@
                 <p>No question</p>
             </div>
             <div class="col-3" id="trending">
+                {% if user.is_authenticated %}
+                <a id="ask_btn" class="btn btn-success btn-lg btn-block" >Ask!</a>
+                {% endif %}
                 <ul>
                     <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab hic porro possimus soluta quod
                         unde quaerat. Doloremque veritatis laborum mollitia non illum velit esse perferendis? Quo
