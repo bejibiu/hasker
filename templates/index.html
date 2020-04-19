@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block title %}Hasker{% endblock %}
+{% block content %}
+<dir class="row">
+            <div class="col-9" id="list_question">
+                <p>No question</p>
+            </div>
+            <div class="col-3" id="trending">
+                <ul>
+                    <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab hic porro possimus soluta quod
+                        unde quaerat. Doloremque veritatis laborum mollitia non illum velit esse perferendis? Quo
+                        corporis modi fugit dicta.</li>
+                    <li>Expedita ad debitis explicabo assumenda, deserunt animi quas nostrum dicta numquam cumque
+                        commodi odio culpa ab obcaecati illo sint quis? Asperiores neque magni corporis, sunt cumque
+                        pariatur ratione similique molestiae!</li>
+                    <li>Sed, voluptatem, eos iusto quo velit error maxime pariatur voluptates officiis doloribus
+                        nisi. Cumque cupiditate sed quidem velit vero itaque dolor aut tempore beatae sapiente,
+                        dolore quasi. A, amet explicabo?</li>
+                    <li>Numquam reiciendis magnam, corrupti perferendis cumque tenetur cum error nulla doloribus
+                        inventore earum sapiente excepturi, vitae quos a molestiae ipsa iste placeat aut.
+                        Voluptatibus ut, quis laboriosam porro odit eligendi?</li>
+                    <li>Libero hic reprehenderit sit? Odit error explicabo unde adipisci cumque voluptatum obcaecati
+                        ipsum rerum aliquam temporibus. Accusantium deleniti, accusamus, minus magni nemo, illo
+                        quidem dolorum esse reprehenderit cupiditate error debitis!</li>
+                    <li>Laudantium exercitationem maiores illum odit, magnam facere beatae? Illo exercitationem
+                        excepturi iste mollitia quam incidunt, reiciendis a sed sunt? Non nesciunt dolores quisquam
+                        sequi delectus saepe eos veritatis expedita? Quia?</li>
+                    <li>Adipisci accusantium dolorem fugit illo rem minus ducimus provident, dolores porro
+                        temporibus asperiores facilis eius molestiae, aperiam vel inventore aliquid quis dignissimos
+                        quam saepe omnis quidem, magnam id. Nobis, voluptatem?</li>
+                    <li>Eveniet magni illo voluptatibus. Natus at culpa reprehenderit assumenda inventore sapiente
+                        odit odio voluptatum provident maiores qui quisquam consectetur ipsa quis optio, ducimus
+                        laboriosam esse earum ipsam. Temporibus, facilis porro.</li>
+                </ul>
+            </div>
+        </dir>
+
+
+<!-- Modal registration -->
+<div class="modal fade" id="sign_up_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" >Sign Up</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="form_sign_up" method="POST" action="{% url 'registration' %}">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    <input type="email" class="form-control" placeholder="email" name="email" required>
+                    <input type="text" class="form-control" placeholder="username" name="username" required>
+                    <input type="password" class="form-control" placeholder="password" name="password1" required>
+                    <input type="password" class="form-control" placeholder="passwords" name="password2"
+                        required>
+                    <input type="file" class="form-control" name="avatar">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit" name="send_signup_form" class="btn btn-outline-success" value="save">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Modal login -->
+<div class="modal fade" id="login_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Sign In</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="form_login" method="POST" action="{% url 'login' %}">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    <input type="text" class="form-control" placeholder="username" id='login_username' name="username" required>
+                    <input type="password" class="form-control" placeholder="password" id='login_password' name="password" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit" name="send_login_form" class="btn btn-outline-success" value="Log in">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{%endblock%}

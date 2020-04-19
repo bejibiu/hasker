@@ -1,0 +1,41 @@
+{% extends  'base.html' %}
+{% block title %}
+Settings
+{% endblock %}
+{% block content %}
+<h1 class="name-page">Settings</h1>
+
+
+<form class="form-horizontal" action="{% url 'account_settings' %}" method="POST">{% csrf_token %}
+    {% for field in user_form %}
+     <div class="form-group row">
+        <label for="id_{{ field.name }}" class="col-sm-2 col-form-label col-form-label-sm">
+            {{field.label}}</label>
+        <div class="col-sm-10">
+             <div class="form-control form-control-sm">{{ field }}
+                        <span class="help-inline">
+                            {% for error in  field.errors %}{{ error }}{% endfor %}
+                        </span>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% for field in form %}
+     <div class="form-group row">
+        <label for="id_{{ field.name }}" class="col-sm-2 col-form-label col-form-label-sm">
+            {{field.label}}</label>
+        <div class="col-sm-10">
+             <div class="form-control form-control-sm">{{ field }}
+                        <span class="help-inline">
+                            {% for error in  field.errors %}{{ error }}{% endfor %}
+                        </span>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <div class="form-actions">
+        <button type="submit" id="send_settings_form_btn" class="btn btn-outline-success" >Save</button>
+    </div>
+</form>
+{% endblock%}

@@ -15,6 +15,13 @@ def home_page(browser, live_server):
     return browser.get(live_server.url)
 
 
+@pytest.fixture
+def profile_page(browser, live_server, user):
+    browser.get(live_server.url)
+    func_login(browser, user)
+    return browser.get(live_server.url + "/account/settings/")
+
+
 def func_login(browser, user):
     try:
         browser.find_element_by_id('logout').click()
@@ -70,3 +77,14 @@ class TestHomePage:
         browser.find_element_by_id('logout').click()
 
         assert browser.find_element_by_id('login_btn')
+
+
+class TestProfilePage:
+    def test_profile_page_title(self, browser, profile_page):
+        assert "Settings" in browser.title
+        assert "Settings" in browser.find_element_by_class_name("name-page").text
+
+    def test_change_email(self, browser, profile_page):
+        browser.find_element_by_name('email').send_keys('newemail@test.com')
+        browser.find_element_by_id('send_settings_form_btn').click()
+        assert "newemail@test.com" in browser.find_element_by_name('email').text
