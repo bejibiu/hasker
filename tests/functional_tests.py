@@ -121,8 +121,7 @@ class TestHomePageQuestion:
         browser.find_element_by_id('ask_btn').click()
 
         browser.find_element_by_name("title").send_keys("New Question")
-        browser.find_element_by_name("text").send_keys("This is text question?")
-        browser.find_element_by_name("tags").send_keys("Absurd")
+        browser.find_element_by_name("question").send_keys("This is text question?")
         browser.find_element_by_name("send_ask_btn").click()
 
         assert (
