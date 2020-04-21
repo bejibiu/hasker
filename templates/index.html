@@ -11,12 +11,12 @@
             <div class="col-9" id="list_question">
             {% for question in object_list %}
                 <div class="row question">
-                    <div class="col-1">Votes</div>
-                    <div class="col-1">Answer</div>
+                    <div class="col-1 text-center">Votes <span class="h2">{{question.votes}}</span> </div>
+                    <div class="col-1 text-center">Answer <span class="h2">{{question.answer_count}}</span> </div>
                     <div class="col-8">
                         <table class="table table-borderless table-sm mb-0">
                             <tr>
-                                <td class="text-center h4">
+                                <td class="h4">
                                     <a class="alert-link">{{question.title}}</a>
                                 </td>
                             </tr>
