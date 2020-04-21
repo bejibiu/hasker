@@ -7,11 +7,13 @@ SMALL_LENGTH = 50
 
 User = get_user_model()
 
+
 class Tags(models.Model):
     label = models.CharField(max_length=SMALL_LENGTH)
 
 
 class Question(models.Model):
+    max_tags = 3
     title = models.CharField(max_length=200)
     text = models.TextField()
     date = models.DateTimeField(auto_now=True)
@@ -26,6 +28,7 @@ class Question(models.Model):
     @property
     def answer_count(self):
         return self.answer_set.count()
+
 
 class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)

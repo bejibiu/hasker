@@ -24,7 +24,7 @@ class QuestionCreateView(CreateView):
             question.author = request.user
             question.save()
             tags = question_form.data['tags']
-            for tag in tags.split(','):
+            for tag in tags.split(',')[:question.max_tags]:
                 question.tags.add(Tags.objects.create(label=tag))
             messages.success(self.request, 'Ask saved successfully')
             return redirect(reverse('home'))

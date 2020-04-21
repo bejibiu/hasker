@@ -3,7 +3,7 @@ from django.urls import reverse
 from question_and_answer.models import Question, Tags
 
 
-def test_home_page_content(client):
+def test_home_page_content(client, db):
     res = client.get('/')
     elements_by_id_on_home_page = [
         'logo',
@@ -47,3 +47,7 @@ def test_save_question_with_tags(authenticated_client):
     assert question.answer_count == 0
 
 
+def test_save_question_with_max_3tags(authenticated_client):
+    data = {"title": "Title for message", "text": "is that a question?", "tags": "1,2,3,4"}
+    res = authenticated_client.post(reverse("save_question"), data)
+    assert Tags.objects.count() == 3
