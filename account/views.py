@@ -4,9 +4,7 @@ from django.contrib import messages
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from django.http import HttpResponse
-from django.shortcuts import render, redirect
-from django.views.generic import DetailView
+from django.shortcuts import render
 
 from .forms import AccountForm, UserChangeFormSimple
 from .models import Account

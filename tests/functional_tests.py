@@ -113,7 +113,8 @@ class TestProfilePage:
 
 class TestHomePageQuestion:
     def test_not_available_button_ask_if_user_not_auth(self, browser, home_page, user):
-        assert not browser.find_element_by_id('ask_btn')
+        with pytest.raises(NoSuchElementException):
+            browser.find_element_by_id('ask_btn')
         func_login(browser, user)
         assert browser.find_element_by_id('ask_btn')
 
@@ -121,11 +122,11 @@ class TestHomePageQuestion:
         browser.find_element_by_id('ask_btn').click()
 
         browser.find_element_by_name("title").send_keys("New Question")
-        browser.find_element_by_name("question").send_keys("This is text question?")
+        browser.find_element_by_name("text").send_keys("This is text question?")
         browser.find_element_by_name("send_ask_btn").click()
 
         assert (
-                "Ask was added"
+                "Ask saved successfully"
                 in browser.find_element_by_class_name("alert-success").text
         )
         browser.find_element_by_class_name('question')

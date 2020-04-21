@@ -14,7 +14,7 @@ class Question(models.Model):
     text = models.TextField()
     date = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    tags = models.ManyToManyField(Tags)
+    tags = models.ManyToManyField(Tags, null=True)
 
 
 class Answer(models.Model):

@@ -111,7 +111,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="ask_form" method="POST" action="{% url 'home' %}">
+            <form id="ask_form" method="POST" action="{% url 'save_question' %}">
                 <div class="modal-body">
                     {% csrf_token %}
                     <div class="form-group row">
@@ -124,9 +124,9 @@
                     <div class="form-group row">
                         <label for="question" class="col-sm-2 col-form-label">Question</label>
                         <div class="col-sm-10">
-                            <textarea class="form-control" id="question" name="question"
-                                      placeholder="I think it's impossible, but WebAssembly gives me a chance." required>
-                            </textarea>
+                            <textarea class="form-control" id="question" name="text"
+                                      placeholder="I think it's impossible, but WebAssembly gives me a chance."
+                                      required></textarea>
                         </div>
                     </div>
 
