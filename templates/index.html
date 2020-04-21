@@ -9,7 +9,36 @@
 {% block content %}
 <dir class="row">
             <div class="col-9" id="list_question">
-                <p>No question</p>
+            {% for question in object_list %}
+                <div class="row question">
+                    <div class="col-1">Votes</div>
+                    <div class="col-1">Answer</div>
+                    <div class="col-8">
+                        <table class="table table-borderless table-sm mb-0">
+                            <tr>
+                                <td class="text-center h4">
+                                    <a class="alert-link">{{question.title}}</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    {% for tag in question.tags.all %}
+                                    <span class="btn btn-success btn-sm btn-tag">
+                                        {{tag.label}}
+                                    </span>
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-2">
+                        {{question.author}}
+
+                    </div>
+                </div>
+            {% empty %}
+                <li>No question</li>
+            {% endfor %}
             </div>
             <div class="col-3" id="trending">
                 {% if user.is_authenticated %}

@@ -1,0 +1,6 @@
+.question {
+    border-bottom: 1px solid var(--gray)
+}
+.btn-tag {
+min-width: 70px;
+}
