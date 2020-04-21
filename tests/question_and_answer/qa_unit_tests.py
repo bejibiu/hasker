@@ -38,7 +38,12 @@ def test_save_question_without_tags(authenticated_client):
 def test_save_question_with_tags(authenticated_client):
     data = {"title": "Title for message", "text": "is that a question?", "tags": "1,2"}
     res = authenticated_client.post(reverse("save_question"), data)
+    question = Question.objects.first()
+    assert res.status_code == 302
     assert Question.objects.all().count() == 1
     assert Question.objects.first().title == data["title"]
     assert Tags.objects.count() == 2
-    assert res.status_code == 302
+    assert question.votes == 0
+    assert question.answer_count == 0
+
+
