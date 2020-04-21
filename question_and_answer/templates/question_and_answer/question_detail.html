@@ -1,0 +1,42 @@
+{% extends  'base.html' %}
+{% block content %}
+    <h2>{{object.title}}</h2>
+<div class="row">
+    <div class="col-1">
+        <table>
+            <tr>
+                <td class="text-center">
+                     UP
+                </td></tr>
+            <tr>
+                <td class="text-center">
+                    {{object.votes}}
+                </td> </tr>
+            <tr>
+                <td class="text-center">
+                    DOWN
+                </td> </tr>
+        </table>
+    </div>
+    <div class="col-11">
+        <div class="row">
+            <div class="col-12">
+                {{object.text}}
+            </div>
+        </div>
+        <div class="row justify-content-between">
+        <div class="col-6">
+        {% for tag in object.tags.all %}
+            <span class="btn btn-success btn-sm btn-tag">
+                {{tag.label}}
+            </span>
+        {% endfor %}
+        </div>
+        <div class="col-2">
+            {{object.author}}
+        </div>
+    </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.conf import settings
+from django.urls import reverse
 
 MIDDLE_LENGTH = 200
 SMALL_LENGTH = 50
@@ -28,6 +29,9 @@ class Question(models.Model):
     @property
     def answer_count(self):
         return self.answer_set.count()
+
+    def get_absolute_url(self):
+        return reverse('detail_question', args=[str(self.pk)])
 
 
 class Answer(models.Model):

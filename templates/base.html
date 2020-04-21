@@ -59,5 +59,103 @@
 
     </div>
 </body>
+<!-- Modal registration -->
+<div class="modal fade" id="sign_up_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" >Sign Up</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="form_sign_up" method="POST" enctype="multipart/form-data"  action="{% url 'registration' %}">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    <input type="email" class="form-control" placeholder="email" name="email" required>
+                    <input type="text" class="form-control" placeholder="username" name="username" required>
+                    <input type="password" class="form-control" placeholder="password" name="password1" required>
+                    <input type="password" class="form-control" placeholder="passwords" name="password2"
+                        required>
+                    <input type="file" class="form-control" name="avatar">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit" name="send_signup_form" class="btn btn-outline-success" value="save">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Modal login -->
+<div class="modal fade" id="login_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Sign In</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="form_login" method="POST" action="{% url 'login' %}">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    <input type="text" class="form-control" placeholder="username" id='login_username' name="username" required>
+                    <input type="password" class="form-control" placeholder="password" id='login_password' name="password" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit" name="send_login_form" class="btn btn-outline-success" value="Log in">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Modal ask question -->
+<div class="modal fade" id="ask_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ask</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="ask_form" method="POST" action="{% url 'save_question' %}">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    <div class="form-group row">
+                        <label for="title" class="col-sm-2 col-form-label">Title</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="title" id="title"
+                                   placeholder="How create frontend with c++?" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="question" class="col-sm-2 col-form-label">Question</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" id="question" name="text"
+                                      placeholder="I think it's impossible, but WebAssembly gives me a chance."
+                                      required></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="tags" class="col-sm-2 col-form-label">Tags</label>
+                        <div class="col-sm-10">
+                            <input class="js-example-basic-single" name="tags" id="tags">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit" name="send_ask_btn" class="btn btn-outline-success" value="Ask!">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 {% block end_script %}{% endblock %}
 </html>

@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, DetailView
 
 from question_and_answer.forms import QuestionForm
 from question_and_answer.models import Question, Tags
@@ -29,3 +29,7 @@ class QuestionCreateView(CreateView):
             messages.success(self.request, 'Ask saved successfully')
             return redirect(reverse('home'))
         return render(request, "index.html", {"question_form": question_form})
+
+
+class DetailQuestion(DetailView):
+    model = Question

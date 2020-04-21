@@ -1,6 +1,8 @@
 import pytest
 from django.contrib.auth.models import User
 
+from question_and_answer.models import Question
+
 
 @pytest.fixture
 def user():
@@ -16,3 +18,10 @@ def authenticated_client(db, user):
     client = Client()
     client.login(username=user.username, password="very_Strong_password!@# Z")
     return client
+
+
+@pytest.fixture()
+def question(db, user):
+    question = Question.objects.create(title="Title", text="Text question", author=user)
+    yield question
+    question.delete()

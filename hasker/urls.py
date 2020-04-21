@@ -18,11 +18,12 @@ from django.contrib import admin
 from django.urls import path, include
 
 from hasker import settings
-from question_and_answer.views import HomePageTemplate, QuestionCreateView
+from question_and_answer.views import HomePageTemplate, QuestionCreateView, DetailQuestion
 
 urlpatterns = [
     path('', HomePageTemplate.as_view(), name='home'),
     path('account/', include('account.urls')),
     path('admin/', admin.site.urls),
-    path('save-question/', QuestionCreateView.as_view(), name='save_question')
+    path('save-question/', QuestionCreateView.as_view(), name='save_question'),
+    path('question/<int:pk>/', DetailQuestion.as_view(), name='detail_question'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

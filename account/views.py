@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.views import LoginView
 from django.shortcuts import render
 
 from .forms import AccountForm, UserChangeFormSimple
@@ -37,7 +38,7 @@ def settings(request):
         account_form = AccountForm(request.POST, request.FILES, instance=request.user.account)
         if user_form.is_valid() and account_form.is_valid():
             new_email = user_form.cleaned_data['email']
-            logging.info(f"user {request.user} change email from {request.user.email } to {new_email}")
+            logging.info(f"user {request.user} change email from {request.user.email} to {new_email}")
             user_form.save()
             account = account_form.save(commit=False)
             account.user = request.user
@@ -48,3 +49,10 @@ def settings(request):
     account_form = AccountForm(initial={"user": request.user})
     return render(request, 'account/settings.html', {"user_form": user_form, "form": account_form})
 
+
+class LoginAccountView(LoginView):
+    def get_redirect_url(self):
+        redirect = super(LoginAccountView, self).get_redirect_url()
+        if not redirect:
+            redirect = self.request.META.get('HTTP_REFERER')
+        return redirect
