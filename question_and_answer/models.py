@@ -9,22 +9,25 @@ SMALL_LENGTH = 50
 User = get_user_model()
 
 
+class Message(models.Model):
+    text = models.TextField()
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now=True)
+    user_votes = models.ManyToManyField(User, related_name='user_votes')
+    votes = models.IntegerField(default=0)
+
+    class Meta:
+        abstract = True
+
+
 class Tags(models.Model):
     label = models.CharField(max_length=SMALL_LENGTH)
 
 
-class Question(models.Model):
+class Question(Message):
     max_tags = 3
     title = models.CharField(max_length=200)
-    text = models.TextField()
-    date = models.DateTimeField(auto_now=True)
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tags)
-    user_votes = models.ManyToManyField(User, related_name='user_votes')
-
-    @property
-    def votes(self):
-        return self.user_votes.count()
 
     @property
     def answer_count(self):
@@ -34,8 +37,7 @@ class Question(models.Model):
         return reverse('detail_question', args=[str(self.pk)])
 
 
-class Answer(models.Model):
+class Answer(Message):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    text = models.TextField()
-    date = models.DateTimeField(auto_now=True)
     accepted = models.BooleanField(default=False)
+    user_votes = models.ManyToManyField(User, related_name='user_answer_votes')
