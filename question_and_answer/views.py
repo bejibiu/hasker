@@ -69,4 +69,4 @@ class ChangeVotesClass(LoginRequiredMixin, View):
         question = Question.objects.get(pk=pk)
         handler = {"up": (question.votes_up, question.votes_down), "down": (question.votes_down, question.votes_up)}
         self.toggle_votes(*handler[votes_do])
-        return render(request, 'question_and_answer/question_detail.html', {"question": question})
+        return redirect(reverse('detail_question', args=pk))
