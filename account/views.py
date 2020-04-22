@@ -51,8 +51,10 @@ def settings(request):
 
 
 class LoginAccountView(LoginView):
-    def get_redirect_url(self):
-        redirect = super(LoginAccountView, self).get_redirect_url()
-        if not redirect:
-            redirect = self.request.META.get('HTTP_REFERER')
+    template_name = 'account/login.html'
+
+    def get_success_url(self):
+        if f'?{self.redirect_field_name}=' in self.request.META.get('HTTP_REFERER'):
+            return self.request.META.get('HTTP_REFERER').split(f'?{self.redirect_field_name}=')[-1]
+        redirect = super(LoginAccountView, self).get_success_url()
         return redirect

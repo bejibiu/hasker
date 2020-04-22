@@ -54,6 +54,7 @@ class DetailQuestion(DetailView, FormMixin):
 
 
 class ChangeVotesClass(LoginRequiredMixin, View):
+    login_url = '/account/login/'
     http_method_names = ['get', ]
 
     def toggle_votes(self, selected_list_voted, another_list_voted):
