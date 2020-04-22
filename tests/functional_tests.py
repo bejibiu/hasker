@@ -147,10 +147,10 @@ class TestHomePageQuestion:
 
 class TestQuestionAndAnswer:
     """
-    Страница вопроса со списĸом ответов. На странице вопроса можно добавить ответ.
++    Страница вопроса со списĸом ответов. На странице вопроса можно добавить ответ.
     Ответы сортируются по рейтингу и дате добавления при равном рейтинге. Ответы разбиваются по 30 штуĸ на странице.
 
-    Форма добавления ответа находится на странице вопроса. Отображается тольĸо для авторизованных пользователей.
++    Форма добавления ответа находится на странице вопроса. Отображается тольĸо для авторизованных пользователей.
         После добавления ответа, автор вопроса должен получить email с уведомление от новом ответе.
             В этом письме должна быть ссылĸа для перехода на страницу вопроса.
         Автор вопроса может пометить один из ответов ĸаĸ правильный.
@@ -165,3 +165,12 @@ class TestQuestionAndAnswer:
             browser.find_element_by_id('answer-form')
         func_login(browser, user)
         assert browser.find_element_by_id("answer-form")
+
+    def test_send_answer(self, browser, auth_session, question_page):
+        browser.find_element_by_name('text').send_keys('this is answer')
+        browser.find_element_by_id('send_answer_btn').click()
+        assert (
+                "Answer saved successfully"
+                in browser.find_element_by_class_name("alert-success").text
+        )
+        browser.find_element_by_class_name('answer')
