@@ -6,15 +6,19 @@
         <table>
             <tr>
                 <td class="text-center">
-                    <i class="material-icons">keyboard_arrow_up</i>
+                    <a id="up_question">
+                        <i class="material-icons">keyboard_arrow_up</i>
+                    </a>
                 </td></tr>
             <tr>
                 <td class="text-center">
-                    {{object.votes}}
+                    <span id="votes-question">{{object.votes}}</span>
                 </td> </tr>
             <tr>
                 <td class="text-center">
-                    <i class="material-icons">keyboard_arrow_down</i>
+                    <a id="down_question">
+                        <i class="material-icons">keyboard_arrow_down</i>
+                    </a>
                 </td> </tr>
             {% if answer.accepted %}
             <tr>

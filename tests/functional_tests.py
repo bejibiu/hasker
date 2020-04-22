@@ -174,3 +174,14 @@ class TestQuestionAndAnswer:
                 in browser.find_element_by_class_name("alert-success").text
         )
         browser.find_element_by_class_name('answer')
+
+    def test_add_votes_to_answer(self, browser, auth_session, question_page):
+        browser.find_element_by_id('up_question').click()
+        assert browser.find_element_by_id('votes-question').text == "1"
+        browser.find_element_by_id('up_question').click()
+        assert browser.find_element_by_id('votes-question').text == "0"
+        browser.find_element_by_id('down_question').click()
+        assert browser.find_element_by_id('votes-question').text == "-1"
+        browser.find_element_by_id('down_question').click()
+        assert browser.find_element_by_id('votes-question').text == "0"
+
