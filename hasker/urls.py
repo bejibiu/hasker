@@ -15,15 +15,16 @@ Including another URLconf
 """
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 
 from hasker import settings
-from question_and_answer.views import HomePageTemplate, QuestionCreateView, DetailQuestion
+from question_and_answer.views import HomePageTemplate, QuestionCreateView, DetailQuestion, ChangeVotesClass
 
 urlpatterns = [
     path('', HomePageTemplate.as_view(), name='home'),
     path('account/', include('account.urls')),
     path('admin/', admin.site.urls),
     path('save-question/', QuestionCreateView.as_view(), name='save_question'),
+    re_path(r'^question/(?P<pk>\d+)/(?P<votes_do>up|down)/$', ChangeVotesClass.as_view(), name='detail_question'),
     path('question/<int:pk>/', DetailQuestion.as_view(), name='detail_question'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

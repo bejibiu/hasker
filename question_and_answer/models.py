@@ -13,8 +13,12 @@ class Message(models.Model):
     text = models.TextField()
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now=True)
-    user_votes = models.ManyToManyField(User, related_name='user_votes')
-    votes = models.IntegerField(default=0)
+    votes_up = models.ManyToManyField(User, related_name='user_votes_up')
+    votes_down = models.ManyToManyField(User, related_name='user_votes_down')
+
+    @property
+    def votes(self):
+        return self.votes_up.count() - self.votes_down.count()
 
     class Meta:
         abstract = True
@@ -40,4 +44,5 @@ class Question(Message):
 class Answer(Message):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     accepted = models.BooleanField(default=False)
-    user_votes = models.ManyToManyField(User, related_name='user_answer_votes')
+    votes_up = models.ManyToManyField(User, related_name='user_votes_answer_up')
+    votes_down = models.ManyToManyField(User, related_name='user_votes_answer_down')
