@@ -29,12 +29,9 @@ def question(db, user):
 
 @pytest.fixture()
 def answers(db, user, question):
-    answer = Answer.objects.create(text='This answer 1', question=question)
-    answer2 = Answer.objects.create(text='This answer 2', question=question)
-    answer3 = Answer.objects.create(text='This answer 3', question=question)
-    answer4 = Answer.objects.create(text='This answer 4', question=question)
-    yield answer
-    answer.delete()
-    answer2.delete()
-    answer3.delete()
-    answer4.delete()
+    answers = [Answer.objects.create(text='This answer 1', question=question, author=user),
+               Answer.objects.create(text='This answer 2', question=question, author=user),
+               Answer.objects.create(text='This answer 3', question=question, author=user),
+               Answer.objects.create(text='This answer 4', question=question, author=user)]
+    return answers
+
