@@ -175,7 +175,7 @@ class TestQuestionAndAnswer:
         )
         browser.find_element_by_class_name('answer')
 
-    def test_add_votes_to_answer(self, browser, auth_session, question_page):
+    def test_add_votes_to_question(self, browser, auth_session, question_page):
         browser.find_element_by_id('up_question').click()
         assert browser.find_element_by_id('votes-question').text == "1"
         browser.find_element_by_id('up_question').click()
@@ -185,3 +185,22 @@ class TestQuestionAndAnswer:
         browser.find_element_by_id('down_question').click()
         assert browser.find_element_by_id('votes-question').text == "0"
 
+    def test_add_votes_to_answer(self, browser, auth_session, question_page, answers):
+        browser.find_element_by_id('up-answer-1').click()
+        assert browser.find_element_by_id('votes-answer-1').text == "1"
+        browser.find_element_by_id('up-answer-1').click()
+        assert browser.find_element_by_id('votes-answer-1').text == "0"
+        browser.find_element_by_id('down-answer-1').click()
+        assert browser.find_element_by_id('votes-answer-1').text == "-1"
+        browser.find_element_by_id('down-answer-1').click()
+        assert browser.find_element_by_id('votes-answer-1').text == "0"
+        browser.find_element_by_id('up-answer-1').click()
+        browser.find_element_by_id('up-answer-2').click()
+        assert browser.find_element_by_id('votes-answer-1').text == "0"
+        assert browser.find_element_by_id('votes-answer-2').text == "1"
+
+    def test_set_answer_as_right(self, browser, auth_session, question_page, answers):
+        with pytest.raises(NoSuchElementException):
+            browser.find_element_by_class_name('right-answer')
+        browser.find_element_by_id('toggle-right-answer-1').click()
+        assert browser.find_element_by_class_name('right-answer')

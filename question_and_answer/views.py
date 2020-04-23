@@ -7,7 +7,7 @@ from django.views.generic import CreateView, ListView, DetailView
 from django.views.generic.edit import FormMixin
 
 from question_and_answer.forms import QuestionForm, AnswerForm
-from question_and_answer.models import Question, Tags
+from question_and_answer.models import Question, Tags, Answer
 
 
 class HomePageTemplate(ListView):
@@ -70,3 +70,44 @@ class ChangeVotesClass(LoginRequiredMixin, View):
         handler = {"up": (question.votes_up, question.votes_down), "down": (question.votes_down, question.votes_up)}
         self.toggle_votes(*handler[votes_do])
         return redirect(reverse('detail_question', args=pk))
+
+
+class ChangeVotesAnswerClass(LoginRequiredMixin, View):
+    login_url = '/account/login/'
+    http_method_names = ['get', ]
+
+    def toggle_votes(self, pk_question, selected_list_voted, another_list_voted):
+        if self.request.user in selected_list_voted.all():
+            selected_list_voted.remove(self.request.user)
+            return
+        [answer.votes_down.remove(self.request.user) for answer in
+         Answer.objects.filter(question_id=pk_question).filter(votes_down=self.request.user)]
+        [answer.votes_up.remove(self.request.user) for answer in
+         Answer.objects.filter(question_id=pk_question).filter(votes_up=self.request.user)]
+        selected_list_voted.add(self.request.user)
+        if self.request.user in another_list_voted.all():
+            another_list_voted.remove(self.request.user)
+
+    def get(self, request, pk_question, pk, votes_do):
+        answer = Answer.objects.get(pk=pk)
+        handler = {"up": (answer.votes_up, answer.votes_down), "down": (answer.votes_down, answer.votes_up)}
+        self.toggle_votes(pk_question, *handler[votes_do])
+        return redirect(reverse('detail_question', args=pk_question))
+
+
+class ToggleAnswerRightClass(LoginRequiredMixin, View):
+    login_url = '/account/login/'
+    http_method_names = ['get', ]
+
+    def dispatch(self, request, *args, **kwargs):
+        if "pk_question" not in kwargs.keys():
+            return self.handle_no_permission()
+        if self.request.user != Question.objects.get(pk=kwargs['pk_question']).author:
+            return self.handle_no_permission()
+        return super(ToggleAnswerRightClass, self).dispatch(request, *args, **kwargs)
+
+    def get(self, request, pk_question, pk, **kwargs):
+        answer = Answer.objects.get(pk=pk)
+        answer.right = not answer.right
+        answer.save()
+        return redirect(reverse('detail_question', args=self.kwargs['pk_question']))

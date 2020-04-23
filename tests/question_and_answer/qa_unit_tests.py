@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.urls import reverse
 
 from question_and_answer.models import Question, Tags
@@ -74,3 +75,33 @@ def test_toggle_votes(authenticated_client, question):
     assert question.votes == -1
 
 
+# answer toggle votes
+def test_upper_votes_to_answer(authenticated_client, answers):
+    answer = answers[0]
+    res = authenticated_client.get(f'{answer.get_absolute_url()}up/')
+    assert answer.votes == 1
+    res = authenticated_client.get(f'{answer.get_absolute_url()}up/')
+    assert answer.votes == 0
+
+
+def test_set_answer_as_right(authenticated_client, answers):
+    answer = answers[0]
+    authenticated_client.get(answer.get_absolute_url_to_toggle_answer_as_right())
+    assert answer.right
+
+
+def test_set_answer_as_right_if_not_author(authenticated_client, answers):
+    answer = answers[0]
+    user = User.objects.create(username='new_user', password1='superPup3rP@ssVV0Rd')
+    answer.question.author = user
+    answer.question.save()
+    res = authenticated_client.get(answer.get_absolute_url_to_toggle_answer_as_right())
+    assert not answer.right
+    assert res.status_code == 403
+
+
+def test_set_answer_as_no_right(authenticated_client, answers):
+    answer = answers[0]
+    authenticated_client.get(answer.get_absolute_url_to_toggle_answer_as_right())
+    authenticated_client.get(answer.get_absolute_url_to_toggle_answer_as_right())
+    assert not answer.right

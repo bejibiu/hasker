@@ -20,11 +20,6 @@
                         <i class="material-icons">keyboard_arrow_down</i>
                     </a>
                 </td> </tr>
-            {% if answer.accepted %}
-            <tr>
-                <td>GRADE!</td>
-            </tr>
-            {% endif %}
         </table>
     </div>
     <div class="col-11">
@@ -53,16 +48,28 @@
         <table>
             <tr>
                 <td class="text-center">
-                     <i class="material-icons h1">keyboard_arrow_up</i>
+                    <a href="{{answer.get_absolute_url}}up/" id="answer_up">
+                        <i class="material-icons">keyboard_arrow_up</i>
+                    </a>
                 </td></tr>
             <tr>
-                <td class="text-center">
+                <td class="text-center" id="votes-answer-{{ answer.pk }}">
                     {{answer.votes}}
                 </td> </tr>
             <tr>
                 <td class="text-center">
-                    <i class="material-icons">keyboard_arrow_down</i>
+                    <a href="{{answer.get_absolute_url}}down/" id="answer_down">
+                        <i class="material-icons">keyboard_arrow_down</i>
+                    </a>
                 </td> </tr>
+            {% if answer.right %}
+            <tr class="right-answer">
+                <td>GRADE!</td>
+            </tr>
+            {% endif %}
+            {% if question.author == request.user %}
+            <a href="{{ answer.get_absolute_url_to_toggle_answer_as_right }}" id="toggle-right-answer-{{ answer.id }}"> mark as right answer </a>
+            {% endif %}
         </table>
     </div>
     <div class="col-11">

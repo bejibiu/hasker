@@ -43,6 +43,15 @@ class Question(Message):
 
 class Answer(Message):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    accepted = models.BooleanField(default=False)
+    right = models.BooleanField(default=False)
     votes_up = models.ManyToManyField(User, related_name='user_votes_answer_up')
     votes_down = models.ManyToManyField(User, related_name='user_votes_answer_down')
+
+    def get_absolute_url_to_toggle_answer_as_right(self):
+        return f"{reverse('detail_question', args=[str(self.question.pk)])}answer/{self.pk}/right/"
+
+    def get_absolute_url(self):
+        return f"{reverse('detail_question', args=[str(self.question.pk)])}answer/{self.pk}/"
+
+    def get_all_votes_user(self):
+        return self.votes_up.all().union(self.votes_down.all())
