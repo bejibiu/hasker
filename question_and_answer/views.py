@@ -1,10 +1,12 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import F, Count
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
 from django.views.generic import CreateView, ListView, DetailView
 from django.views.generic.edit import FormMixin
+from django.views.generic.list import MultipleObjectMixin
 
 from question_and_answer.forms import QuestionForm, AnswerForm
 from question_and_answer.models import Question, Tags, Answer
@@ -38,6 +40,14 @@ class DetailQuestion(DetailView, FormMixin):
     model = Question
     form_class = AnswerForm
     http_method_names = ['get', 'post']
+
+    def get_context_data(self, **kwargs):
+        context = super(DetailQuestion, self).get_context_data(**kwargs)
+        context['answers'] = self.object.answer_set.all() \
+            .annotate(up=Count('votes_up')) \
+            .annotate(down=Count('votes_down')) \
+            .order_by('-right', F('down') - F('up'), 'date')
+        return context
 
     def post(self, request, pk):
         form_answer = self.form_class(request.POST)
