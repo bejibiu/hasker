@@ -55,3 +55,6 @@ class Answer(Message):
 
     def get_all_votes_user(self):
         return self.votes_up.all().union(self.votes_down.all())
+
+    def toggle_right(self):
+        self.right = not self.right

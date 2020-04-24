@@ -108,6 +108,10 @@ class ToggleAnswerRightClass(LoginRequiredMixin, View):
 
     def get(self, request, pk_question, pk, **kwargs):
         answer = Answer.objects.get(pk=pk)
-        answer.right = not answer.right
+        if answer.right is False:
+            for right_answer in Answer.objects.filter(question_id=pk_question).filter(right=True):
+                right_answer.toggle_right()
+                right_answer.save()
+        answer.toggle_right()
         answer.save()
         return redirect(reverse('detail_question', args=self.kwargs['pk_question']))
