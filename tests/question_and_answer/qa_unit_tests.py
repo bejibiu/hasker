@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.urls import reverse
 
-from question_and_answer.models import Question, Tags
+from question_and_answer.models import Question, Tags, Answer
 
 
 def test_home_page_content(client, db):
@@ -92,7 +92,7 @@ def test_set_answer_as_right(authenticated_client, answers):
 
 def test_set_answer_as_right_if_not_author(authenticated_client, answers):
     answer = answers[0]
-    user = User.objects.create(username='new_user', password1='superPup3rP@ssVV0Rd')
+    user = User.objects.create(username='new_user')
     answer.question.author = user
     answer.question.save()
     res = authenticated_client.get(answer.get_absolute_url_to_toggle_answer_as_right())
@@ -100,8 +100,21 @@ def test_set_answer_as_right_if_not_author(authenticated_client, answers):
     assert res.status_code == 403
 
 
-def test_set_answer_as_no_right(authenticated_client, answers):
+def test_toggle_answer_right(authenticated_client, answers):
     answer = answers[0]
     authenticated_client.get(answer.get_absolute_url_to_toggle_answer_as_right())
+    assert Answer.objects.get(pk=answer.id).right
     authenticated_client.get(answer.get_absolute_url_to_toggle_answer_as_right())
-    assert not answer.right
+    assert Answer.objects.get(pk=answer.id).right is False
+
+
+def test_toggle_answer_right_after_set_another_answer_right(authenticated_client, answers):
+    answer1 = answers[1]
+    answer2 = answers[2]
+    authenticated_client.get(answer1.get_absolute_url_to_toggle_answer_as_right())
+    assert Answer.objects.get(pk=answer1.id).right
+    authenticated_client.get(answer2.get_absolute_url_to_toggle_answer_as_right())
+    assert Answer.objects.get(pk=answer1.id).right is False
+
+
+

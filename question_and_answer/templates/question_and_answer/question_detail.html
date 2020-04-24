@@ -61,14 +61,35 @@
                     <a href="{{answer.get_absolute_url}}down/" id="answer_down">
                         <i class="material-icons">keyboard_arrow_down</i>
                     </a>
-                </td> </tr>
-            {% if answer.right %}
-            <tr class="right-answer">
-                <td>GRADE!</td>
+                </td>
             </tr>
-            {% endif %}
             {% if question.author == request.user %}
-            <a href="{{ answer.get_absolute_url_to_toggle_answer_as_right }}" id="toggle-right-answer-{{ answer.id }}"> mark as right answer </a>
+            <tr>
+                <td>
+                    <a href="{{ answer.get_absolute_url_to_toggle_answer_as_right }}" id="toggle-right-answer-{{ answer.id }}">
+                        {% if answer.right %}
+                        <span id="grade-{{ answer.id }}" class="material-icons right-answer">
+                            grade
+                        </span>
+                        {% else %}
+                        <span id="no-grade-{{ answer.id }}" class="material-icons ">
+                            star_outline
+                        </span>
+                        {% endif %}
+                    </a>
+                </td>
+            </tr>
+
+            {% else %}
+                {% if answer.right %}
+                <tr class="right-answer">
+                    <td>
+                        <span class="material-icons">
+                            grade
+                        </span>
+                    </td>
+                </tr>
+                {% endif %}
             {% endif %}
         </table>
     </div>

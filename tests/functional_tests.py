@@ -199,8 +199,17 @@ class TestQuestionAndAnswer:
         assert browser.find_element_by_id('votes-answer-1').text == "0"
         assert browser.find_element_by_id('votes-answer-2').text == "1"
 
-    def test_set_answer_as_right(self, browser, auth_session, question_page, answers):
+    def test_set_answer_as_right(self, browser, auth_session, answers, question_page):
         with pytest.raises(NoSuchElementException):
             browser.find_element_by_class_name('right-answer')
         browser.find_element_by_id('toggle-right-answer-1').click()
         assert browser.find_element_by_class_name('right-answer')
+
+    def test_set_all_answer_as_right(self, browser, auth_session, answers, question_page):
+        with pytest.raises(NoSuchElementException):
+            browser.find_element_by_class_name('right-answer')
+        browser.find_element_by_id('toggle-right-answer-1').click()
+        assert browser.find_element_by_id('grade-1')
+        assert browser.find_element_by_class_name('right-answer')
+        browser.find_element_by_id('toggle-right-answer-2').click()
+        assert browser.find_element_by_id('no-grade-1')
