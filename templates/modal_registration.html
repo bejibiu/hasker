@@ -1,0 +1,28 @@
+<div class="modal fade" id="sign_up_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" >Sign Up</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="form_sign_up" method="POST" enctype="multipart/form-data"
+                  action="{% url 'registration' %}?next={{request.path}}">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    <input type="email" class="form-control" placeholder="email" name="email" required>
+                    <input type="text" class="form-control" placeholder="username" name="username" required>
+                    <input type="password" class="form-control" placeholder="password" name="password1" required>
+                    <input type="password" class="form-control" placeholder="passwords" name="password2"
+                        required>
+                    <input type="file" class="form-control" name="avatar">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit" name="send_signup_form" class="btn btn-outline-success" value="save">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
