@@ -5,6 +5,8 @@ from selenium import webdriver
 import pytest
 from selenium.common.exceptions import NoSuchElementException
 
+from question_and_answer.models import Answer
+
 
 @pytest.fixture(scope="class")
 def browser():
@@ -148,7 +150,8 @@ class TestHomePageQuestion:
 class TestQuestionAndAnswer:
     """
 +    Страница вопроса со списĸом ответов. На странице вопроса можно добавить ответ.
-    Ответы сортируются по рейтингу и дате добавления при равном рейтинге. Ответы разбиваются по 30 штуĸ на странице.
++    Ответы сортируются по рейтингу и дате добавления при равном рейтинге.
+    Ответы разбиваются по 30 штуĸ на странице.
 
 +    Форма добавления ответа находится на странице вопроса. Отображается тольĸо для авторизованных пользователей.
         После добавления ответа, автор вопроса должен получить email с уведомление от новом ответе.
@@ -213,3 +216,9 @@ class TestQuestionAndAnswer:
         assert browser.find_element_by_class_name('right-answer')
         browser.find_element_by_id('toggle-right-answer-2').click()
         assert browser.find_element_by_id('no-grade-1')
+
+    def test_paginate(self, browser, auth_session, answers_two_page, question_page):
+        assert browser.find_element_by_link_text('?page=2')
+        browser.find_element_by_link_text('?page=2').click()
+        assert '?page=2' in browser.current_url
+        assert browser.find_element_by_id("toggle-right-answer-31")
