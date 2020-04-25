@@ -49,6 +49,6 @@ def question_30(db, user):
     q = []
     for num in range(30):
         q.append(Question.objects.create(title=f"This unique {num} question",
-                                         text=b64encode(f'This unique text {num}'),
+                                         text=b64encode(f'This unique text {num}'.encode()),
                                          author=user))
     return q

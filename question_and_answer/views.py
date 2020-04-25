@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core import mail
-from django.db.models import F, Count
+from django.db.models import F, Count, Q
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
@@ -41,6 +41,15 @@ class QuestionCreateView(CreateView):
 class SearchQuestion(ListView):
     model = Question
     template_name = 'search.html'
+    paginate_by = 20
+
+    def get_queryset(self):
+        queryset = super(SearchQuestion, self).get_queryset()
+        query = self.request.GET.get('q')
+        queryset = queryset.filter(
+            Q(title__icontains=query) | Q(text__icontains=query)
+        )
+        return queryset
 
 
 class DetailQuestion(DetailView, FormMixin, MultipleObjectMixin):

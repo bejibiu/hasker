@@ -1,4 +1,5 @@
 import re
+import time
 from base64 import b64decode
 
 from django.core import mail
@@ -116,6 +117,7 @@ class TestProfilePage:
         assert "Settings" in browser.find_element_by_class_name("name-page").text
 
     def test_change_email(self, browser, profile_page):
+        browser.find_element_by_name('email').clear()
         browser.find_element_by_name('email').send_keys('newemail@test.com')
         browser.find_element_by_id('send_settings_form_btn').click()
         assert (
@@ -212,10 +214,9 @@ class TestQuestionAndAnswer:
         assert browser.find_element_by_id(f'no-grade-{answers[0].pk}')
 
     def test_paginate(self, browser, auth_session, answers_two_page, question_page):
-        assert browser.find_element_by_link_text('?page=2')
-        browser.find_element_by_link_text('?page=2').click()
+        assert browser.find_element_by_link_text('2')
+        browser.find_element_by_link_text('2').click()
         assert '?page=2' in browser.current_url
-        assert browser.find_element_by_id("toggle-right-answer-31")
 
 
 class TestSearchPage:
@@ -231,5 +232,18 @@ class TestSearchPage:
         assert 'search?q=' in browser.current_url
         assert "No question" in browser.find_element_by_id("list_question").text
 
-    def test_search_question(self, browser, home_page, question_30):
-        pass
+    def test_search_question(self, browser, question_30, home_page):
+
+        browser.find_element_by_id('search-input').send_keys(f'{question_30[-1].text}')
+        browser.find_element_by_id('search-btn').click()
+        assert 'search?q=' in browser.current_url
+        assert f"{question_30[-1].title}" in browser.find_element_by_id("list_question").text
+        assert f"{question_30[-2].title}" not in browser.find_element_by_id("list_question").text
+
+    def test_paginate_search_result(self, browser, question_30, home_page):
+        browser.find_element_by_id('search-input').send_keys("This unique")
+        browser.find_element_by_id('search-btn').click()
+        assert 'search?q=' in browser.current_url
+        browser.find_element_by_id('page-2-id').click()
+        assert '?page=2' in browser.current_url
+        assert browser.find_element_by_link_text("This unique 20 question")
