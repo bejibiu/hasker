@@ -34,8 +34,13 @@ class QuestionCreateView(CreateView):
             for tag in tags.split(',')[:question.max_tags]:
                 question.tags.add(Tags.objects.create(label=tag))
             messages.success(self.request, 'Ask saved successfully')
-            return redirect(reverse('home'))
+            return redirect(question.get_absolute_url())
         return render(request, "index.html", {"question_form": question_form})
+
+
+class SearchQuestion(ListView):
+    model = Question
+    template_name = 'search.html'
 
 
 class DetailQuestion(DetailView, FormMixin, MultipleObjectMixin):

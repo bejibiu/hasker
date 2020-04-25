@@ -18,6 +18,9 @@
         crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
+    <link href="{% static 'css/selectize.css' %}"
+      rel="stylesheet" />
+    <script src="{% static 'js/selectize.js' %}"></script>
     {% block scripts %}{%endblock%}
 </head>
 
@@ -25,9 +28,9 @@
     <div class="navbar bg-light">
         <h1 id="logo"><a class="navbar-brand" href="/">Hasker</a></h1>
         <div id="search">
-            <form class="form-inline">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
+            <form class="form-inline" method="get" action="{% url 'search_question' %}">
+                <input class="form-control mr-sm-2" type="search" name="q" id="search-input" placeholder="Search">
+                <button class="btn btn-outline-success" id="search-btn" type="submit">Search</button>
             </form>
         </div>
         <div id="user_block">
@@ -151,5 +154,19 @@
         </div>
     </div>
 </div>
+<script>
+
+    $('#tags').selectize({
+        delimiter: ',',
+        persist: false,
+        maxItems: 3,
+        create: function(input) {
+            return {
+                value: input,
+                text: input
+            }
+        }
+    });
+</script>
 {% block end_script %}{% endblock %}
 </html>

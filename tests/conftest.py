@@ -1,3 +1,5 @@
+from base64 import b64encode
+
 import pytest
 from django.contrib.auth.models import User
 
@@ -40,3 +42,13 @@ def answers(db, user, question):
 def answers_two_page(db, user, question):
     for num in range(Answer.paginate + 5):
         Answer.objects.create(text=f'This answer {num}', question=question, author=user)
+
+
+@pytest.fixture()
+def question_30(db, user):
+    q = []
+    for num in range(30):
+        q.append(Question.objects.create(title=f"This unique {num} question",
+                                         text=b64encode(f'This unique text {num}'),
+                                         author=user))
+    return q

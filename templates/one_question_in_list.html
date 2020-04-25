@@ -1,0 +1,26 @@
+<a class="row question" href="{{question.get_absolute_url}}">
+            <div class="col-1 text-center">Votes <span class="h2">{{question.votes}}</span> </div>
+            <div class="col-1 text-center">Answer <span class="h2">{{question.answer_count}}</span> </div>
+            <div class="col-8">
+                <table class="table table-borderless table-sm mb-0">
+                    <tr>
+                        <td class="h4">
+                            <a class="alert-link">{{question.title}}</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {% for tag in question.tags.all %}
+                            <span class="btn btn-success btn-sm btn-tag">
+                                {{tag.label}}
+                            </span>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-2">
+                {{question.author}}
+
+            </div>
+        </a>
