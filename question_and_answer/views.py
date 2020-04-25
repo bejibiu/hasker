@@ -32,8 +32,7 @@ class QuestionCreateView(CreateView):
             question.save()
             tags = question_form.data['tags']
             for tag in tags.split(',')[:question.max_tags]:
-                # TODO: get_or_create
-                question.tags.add(Tags.objects.create(label=tag))
+                question.tags.add((Tags.objects.get_or_create(label=tag))[0])
             messages.success(self.request, 'Ask saved successfully')
             return redirect(question.get_absolute_url())
         return render(request, "index.html", {"question_form": question_form})

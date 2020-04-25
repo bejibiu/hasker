@@ -25,8 +25,7 @@ class Message(models.Model):
 
 
 class Tags(models.Model):
-    # TODO: unique
-    label = models.CharField(max_length=SMALL_LENGTH)
+    label = models.CharField(max_length=SMALL_LENGTH, unique=True)
 
 
 class Question(Message):
