@@ -87,7 +87,7 @@ def test_upper_votes_to_answer(authenticated_client, answers):
 def test_set_answer_as_right(authenticated_client, answers):
     answer = answers[0]
     authenticated_client.get(answer.get_absolute_url_to_toggle_answer_as_right())
-    assert answer.right
+    assert Answer.objects.get(pk=answer.pk).right
 
 
 def test_set_answer_as_right_if_not_author(authenticated_client, answers):

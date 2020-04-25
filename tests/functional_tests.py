@@ -8,7 +8,7 @@ from selenium.common.exceptions import NoSuchElementException
 from question_and_answer.models import Answer
 
 
-@pytest.fixture(scope="class")
+@pytest.fixture(scope="session")
 def browser():
     browser = webdriver.Firefox()
     yield browser
@@ -151,7 +151,7 @@ class TestQuestionAndAnswer:
     """
 +    Страница вопроса со списĸом ответов. На странице вопроса можно добавить ответ.
 +    Ответы сортируются по рейтингу и дате добавления при равном рейтинге.
-    Ответы разбиваются по 30 штуĸ на странице.
++    Ответы разбиваются по 30 штуĸ на странице.
 
 +    Форма добавления ответа находится на странице вопроса. Отображается тольĸо для авторизованных пользователей.
         После добавления ответа, автор вопроса должен получить email с уведомление от новом ответе.
@@ -188,34 +188,34 @@ class TestQuestionAndAnswer:
         browser.find_element_by_id('down_question').click()
         assert browser.find_element_by_id('votes-question').text == "0"
 
-    def test_add_votes_to_answer(self, browser, auth_session, question_page, answers):
-        browser.find_element_by_id('up-answer-1').click()
-        assert browser.find_element_by_id('votes-answer-1').text == "1"
-        browser.find_element_by_id('up-answer-1').click()
-        assert browser.find_element_by_id('votes-answer-1').text == "0"
-        browser.find_element_by_id('down-answer-1').click()
-        assert browser.find_element_by_id('votes-answer-1').text == "-1"
-        browser.find_element_by_id('down-answer-1').click()
-        assert browser.find_element_by_id('votes-answer-1').text == "0"
-        browser.find_element_by_id('up-answer-1').click()
-        browser.find_element_by_id('up-answer-2').click()
-        assert browser.find_element_by_id('votes-answer-1').text == "0"
-        assert browser.find_element_by_id('votes-answer-2').text == "1"
+    def test_add_votes_to_answer(self, browser, auth_session, answers, question_page):
+        browser.find_element_by_id(f'answer-{answers[0].pk}-up').click()
+        assert browser.find_element_by_id(f'votes-answer-{answers[0].pk}').text == "1"
+        browser.find_element_by_id(f'answer-{answers[0].pk}-up').click()
+        assert browser.find_element_by_id(f'votes-answer-{answers[0].pk}').text == "0"
+        browser.find_element_by_id(f'answer-{answers[0].pk}-down').click()
+        assert browser.find_element_by_id(f'votes-answer-{answers[0].pk}').text == "-1"
+        browser.find_element_by_id(f'answer-{answers[0].pk}-down').click()
+        assert browser.find_element_by_id(f'votes-answer-{answers[0].pk}').text == "0"
+        browser.find_element_by_id(f'answer-{answers[0].pk}-up').click()
+        browser.find_element_by_id(f'answer-{answers[1].pk}-up').click()
+        assert browser.find_element_by_id(f'votes-answer-{answers[0].pk}').text == "0"
+        assert browser.find_element_by_id(f'votes-answer-{answers[1].pk}').text == "1"
 
     def test_set_answer_as_right(self, browser, auth_session, answers, question_page):
         with pytest.raises(NoSuchElementException):
             browser.find_element_by_class_name('right-answer')
-        browser.find_element_by_id('toggle-right-answer-1').click()
+        browser.find_element_by_id(f'toggle-right-answer-{answers[0].pk}').click()
         assert browser.find_element_by_class_name('right-answer')
 
     def test_set_all_answer_as_right(self, browser, auth_session, answers, question_page):
         with pytest.raises(NoSuchElementException):
             browser.find_element_by_class_name('right-answer')
-        browser.find_element_by_id('toggle-right-answer-1').click()
-        assert browser.find_element_by_id('grade-1')
+        browser.find_element_by_id(f'toggle-right-answer-{answers[0].pk}').click()
+        assert browser.find_element_by_id(f'grade-{answers[0].pk}')
         assert browser.find_element_by_class_name('right-answer')
-        browser.find_element_by_id('toggle-right-answer-2').click()
-        assert browser.find_element_by_id('no-grade-1')
+        browser.find_element_by_id(f'toggle-right-answer-{answers[0].pk}').click()
+        assert browser.find_element_by_id(f'no-grade-{answers[0].pk}')
 
     def test_paginate(self, browser, auth_session, answers_two_page, question_page):
         assert browser.find_element_by_link_text('?page=2')

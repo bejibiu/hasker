@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator
 from django.db.models import F, Count
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -36,18 +37,20 @@ class QuestionCreateView(CreateView):
         return render(request, "index.html", {"question_form": question_form})
 
 
-class DetailQuestion(DetailView, FormMixin):
+class DetailQuestion(DetailView, FormMixin, MultipleObjectMixin):
     model = Question
     form_class = AnswerForm
     http_method_names = ['get', 'post']
+    paginate_by = 20
 
-    def get_context_data(self, **kwargs):
-        context = super(DetailQuestion, self).get_context_data(**kwargs)
-        context['answers'] = self.object.answer_set.all() \
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object_list = self.object.answer_set.all() \
             .annotate(up=Count('votes_up')) \
             .annotate(down=Count('votes_down')) \
             .order_by('-right', F('down') - F('up'), 'date')
-        return context
+        context = self.get_context_data(object=self.object, object_list=self.object_list)
+        return self.render_to_response(context)
 
     def post(self, request, pk):
         form_answer = self.form_class(request.POST)

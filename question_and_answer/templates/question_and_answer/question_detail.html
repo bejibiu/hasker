@@ -42,13 +42,13 @@
     </div>
     </div>
 </div>
-{% for answer in answers %}
+{% for answer in object_list %}
 <div class="row answer">
     <div class="col-1">
         <table>
             <tr>
                 <td class="text-center">
-                    <a href="{{answer.get_absolute_url}}up/" id="answer_up">
+                    <a href="{{answer.get_absolute_url}}up/" id="answer-{{ answer.pk }}-up">
                         <i class="material-icons">keyboard_arrow_up</i>
                     </a>
                 </td></tr>
@@ -58,7 +58,7 @@
                 </td> </tr>
             <tr>
                 <td class="text-center">
-                    <a href="{{answer.get_absolute_url}}down/" id="answer_down">
+                    <a href="{{answer.get_absolute_url}}down/" id="answer-{{ answer.pk }}-down">
                         <i class="material-icons">keyboard_arrow_down</i>
                     </a>
                 </td>
@@ -128,4 +128,17 @@
 </form>
 {% endif %}
 
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+    {% endif %}
+    {% for page in paginator.page_range %}
+        <li class="page-item"><a class="page-link" id="page-{{ page }}-id" href="?page={{ page }}">{{ page }}</a></li>
+    {% endfor %}
+    {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+    {% endif %}
+  </ul>
+</nav>
 {% endblock %}

@@ -100,10 +100,12 @@
 
     </div>
 </body>
+{% if not  user.is_authenticated %}
 <!-- Modal registration -->
 {% include 'modal_registration.html' %}
 <!-- Modal login -->
 {% include 'modal_login.html' %}
+{% endif %}
 <!-- Modal ask question -->
 <div class="modal fade" id="ask_modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
@@ -149,6 +151,5 @@
         </div>
     </div>
 </div>
-
 {% block end_script %}{% endblock %}
 </html>
