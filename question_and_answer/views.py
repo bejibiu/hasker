@@ -1,6 +1,7 @@
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.paginator import Paginator
+from django.core import mail
 from django.db.models import F, Count
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -41,7 +42,7 @@ class DetailQuestion(DetailView, FormMixin, MultipleObjectMixin):
     model = Question
     form_class = AnswerForm
     http_method_names = ['get', 'post']
-    paginate_by = 20
+    paginate_by = 30
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -59,6 +60,12 @@ class DetailQuestion(DetailView, FormMixin, MultipleObjectMixin):
             answer.author = request.user
             answer.question = Question.objects.get(pk=pk)
             answer.save()
+            url = request.build_absolute_uri(answer.question.get_absolute_url())
+            mail.send_mail('YOU GOT AN ANSWER',
+                           f"Hi friend. For your question, added the answer\n Use this link to you\'r answer"
+                           f" {url}",
+                           settings.EMAIL_HOST_USER,
+                           [answer.question.author.email])
             messages.success(self.request, 'Answer saved successfully')
             return redirect(answer.question.get_absolute_url())
         self.object = self.get_object()

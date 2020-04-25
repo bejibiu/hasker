@@ -6,7 +6,7 @@ from question_and_answer.models import Question, Answer
 
 @pytest.fixture
 def user():
-    user = User.objects.create_user('username', password='very_Strong_password!@# Z')
+    user = User.objects.create_user('username', password='very_Strong_password!@# Z', email="testemail@emai.com")
     yield user
     user.delete()
 

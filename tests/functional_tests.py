@@ -1,5 +1,7 @@
+import re
 from base64 import b64decode
 
+from django.core import mail
 from django.utils.baseconv import base64
 from selenium import webdriver
 import pytest
@@ -169,13 +171,22 @@ class TestQuestionAndAnswer:
         func_login(browser, user)
         assert browser.find_element_by_id("answer-form")
 
-    def test_send_answer(self, browser, auth_session, question_page):
+    def test_send_answer(self, browser, auth_session, user, question_page):
         browser.find_element_by_name('text').send_keys('this is answer')
         browser.find_element_by_id('send_answer_btn').click()
         assert (
                 "Answer saved successfully"
                 in browser.find_element_by_class_name("alert-success").text
         )
+        browser.find_element_by_class_name('answer')
+        email = mail.outbox[0]
+        assert user.email in email.to
+        assert email.subject == 'YOU GOT AN ANSWER'
+        assert 'Use this link to you\'r answer' in email.body
+        url_search = re.search(r'http://.+/.+$', email.body)
+        assert url_search
+        url = url_search.group(0)
+        browser.get(url)
         browser.find_element_by_class_name('answer')
 
     def test_add_votes_to_question(self, browser, auth_session, question_page):
