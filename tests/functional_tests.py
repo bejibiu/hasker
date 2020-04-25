@@ -7,6 +7,8 @@ from selenium import webdriver
 import pytest
 from selenium.common.exceptions import NoSuchElementException
 
+from question_and_answer.models import Question
+
 
 @pytest.fixture(scope="session")
 def browser():
@@ -220,12 +222,6 @@ class TestQuestionAndAnswer:
 
 
 class TestSearchPage:
-    """
-    * Поисĸ идет одновременно по теĸстам вопросов и их заголовĸам, но в списĸе тольĸо вопросы.
-    * Сортировĸа — по рейтингу (дате если рейтинг одинаĸовый), чем выше рейтинг и свежее вопрос, тем он выше в результатах.
-    * Пагинация по 20 вопросов.
-    """
-
     def test_empty_search_result(self, browser, home_page):
         browser.find_element_by_id('search-input').send_keys('_NoResult')
         browser.find_element_by_id('search-btn').click()
@@ -246,4 +242,13 @@ class TestSearchPage:
         assert 'search?q=' in browser.current_url
         browser.find_element_by_id('page-2-id').click()
         assert '?page=2' in browser.current_url
+        assert browser.find_element_by_link_text("This unique 20 question")
+
+    def test_sorted(self, browser, question_30, home_page, user):
+        browser.find_element_by_id('search-input').send_keys("This unique")
+        browser.find_element_by_id('search-btn').click()
+        with pytest.raises(NoSuchElementException):
+            browser.find_element_by_link_text("This unique 20 question")
+        Question.objects.get(title="This unique 20 question").votes_up.add(user)
+        browser.refresh()
         assert browser.find_element_by_link_text("This unique 20 question")

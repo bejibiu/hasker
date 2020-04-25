@@ -32,6 +32,7 @@ class QuestionCreateView(CreateView):
             question.save()
             tags = question_form.data['tags']
             for tag in tags.split(',')[:question.max_tags]:
+                # TODO: get_or_create
                 question.tags.add(Tags.objects.create(label=tag))
             messages.success(self.request, 'Ask saved successfully')
             return redirect(question.get_absolute_url())
@@ -48,7 +49,9 @@ class SearchQuestion(ListView):
         query = self.request.GET.get('q')
         queryset = queryset.filter(
             Q(title__icontains=query) | Q(text__icontains=query)
-        )
+        ).annotate(up=Count('votes_up')) \
+            .annotate(down=Count('votes_down')) \
+            .order_by(F('down') - F('up'), 'date')
         return queryset
 
 
