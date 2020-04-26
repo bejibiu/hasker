@@ -48,7 +48,7 @@ def answers(db, user, question):
 
 @pytest.fixture()
 def answers_two_page(db, user, question):
-    for num in range(Answer.paginate + 5):
+    for num in range(35):
         Answer.objects.create(text=f'This answer {num}', question=question, author=user)
 
 

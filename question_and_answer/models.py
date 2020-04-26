@@ -50,7 +50,6 @@ class Question(Message):
 
 
 class Answer(Message):
-    paginate = 30
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     right = models.BooleanField(default=False)
     votes_up = models.ManyToManyField(User, related_name='user_votes_answer_up')
