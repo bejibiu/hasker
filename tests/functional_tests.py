@@ -153,6 +153,21 @@ class TestHomePageQuestion:
         browser.find_element_by_class_name('question').click()
         assert "/question/" in browser.current_url
 
+    def test_sorted_home_page(self, browser, question_30, home_page, user):
+        with pytest.raises(NoSuchElementException):
+            browser.find_element_by_link_text("This unique 1 question")
+        # sorted by vote
+        browser.find_element_by_id('sorted-by-vote').click()
+        with pytest.raises(NoSuchElementException):
+            browser.find_element_by_link_text("This unique 1 question")
+        Question.objects.get(title="This unique 1 question").votes_up.add(user)
+        browser.refresh()
+        assert browser.find_element_by_link_text("This unique 1 question")
+        # sorted by date
+        browser.find_element_by_id('sorted-by-date').click()
+        with pytest.raises(NoSuchElementException):
+            browser.find_element_by_link_text("This unique 1 question")
+
 
 class TestQuestionAndAnswer:
 
@@ -246,16 +261,16 @@ class TestSearchPage:
         assert 'search?q=' in browser.current_url
         browser.find_element_by_id('page-2-id').click()
         assert '?page=2' in browser.current_url
-        assert browser.find_element_by_link_text("This unique 20 question")
+        assert browser.find_element_by_link_text("This unique 1 question")
 
     def test_sorted(self, browser, question_30, home_page, user):
         browser.find_element_by_id('search-input').send_keys("This unique")
         browser.find_element_by_id('search-btn').click()
         with pytest.raises(NoSuchElementException):
-            browser.find_element_by_link_text("This unique 20 question")
-        Question.objects.get(title="This unique 20 question").votes_up.add(user)
+            browser.find_element_by_link_text("This unique 1 question")
+        Question.objects.get(title="This unique 1 question").votes_up.add(user)
         browser.refresh()
-        assert browser.find_element_by_link_text("This unique 20 question")
+        assert browser.find_element_by_link_text("This unique 1 question")
 
     def test_get_by_tags(self, browser, question, tag, home_page):
         browser.find_element_by_id('search-input').send_keys(f"tag:{tag.label}")

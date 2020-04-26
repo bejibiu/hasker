@@ -31,9 +31,9 @@
         <div class="row justify-content-between">
         <div class="col-6">
         {% for tag in object.tags.all %}
-            <span class="btn btn-success btn-sm btn-tag">
+            <a class="btn btn-success btn-sm btn-tag" href="/search?q=tag:{{tag.label}}">
                 {{tag.label}}
-            </span>
+            </a>
         {% endfor %}
         </div>
         <div class="col-2">

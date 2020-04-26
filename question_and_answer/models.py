@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.conf import settings
+from django.db.models import Count, F
 from django.urls import reverse
 
 MIDDLE_LENGTH = 200
@@ -9,12 +10,19 @@ SMALL_LENGTH = 50
 User = get_user_model()
 
 
+class SortedByVotesQuerySet(models.QuerySet):
+    def order_by_votes_and_date(self):
+        return self.annotate(up=Count('votes_up')).annotate(down=Count('votes_down')).\
+            order_by(F('down') - F('up'), '-date')
+
+
 class Message(models.Model):
     text = models.TextField()
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now=True)
     votes_up = models.ManyToManyField(User, related_name='user_votes_up')
     votes_down = models.ManyToManyField(User, related_name='user_votes_down')
+    objects = SortedByVotesQuerySet.as_manager()
 
     @property
     def votes(self):

@@ -17,16 +17,22 @@ class PopularQuestionMixin(MultipleObjectMixin):
     max_popular_questions = 20
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        popular_questions = Question.objects.all().annotate(up=Count('votes_up')) \
-                       .annotate(down=Count('votes_down')) \
-                       .order_by(F('down') - F('up'), 'date')[:self.max_popular_questions]
+        popular_questions = Question.objects.all().order_by_votes_and_date()[:self.max_popular_questions]
         context = {"popular_questions": popular_questions}
+        context.update(kwargs)
         return super().get_context_data(**context)
 
 
 class HomePageTemplate(ListView, PopularQuestionMixin):
     model = Question
     template_name = 'index.html'
+    paginate_by = 20
+
+    def get_queryset(self):
+        queryset = super(HomePageTemplate, self).get_queryset()
+        ordering = self.request.GET.get("sorted") or '-date'
+        queryset = queryset.order_by_votes_and_date() if ordering == 'vote' else queryset.order_by('-date')
+        return queryset
 
 
 class QuestionCreateView(CreateView):
@@ -48,7 +54,7 @@ class QuestionCreateView(CreateView):
         return render(request, "index.html", {"question_form": question_form})
 
 
-class SearchQuestion(ListView):
+class SearchQuestion(ListView, PopularQuestionMixin):
     model = Question
     template_name = 'search.html'
     paginate_by = 20
@@ -61,13 +67,11 @@ class SearchQuestion(ListView):
             queryset = queryset.filter(tags__label=query)
         else:
             queryset = queryset.filter(Q(title__icontains=query) | Q(text__icontains=query))
-        queryset = queryset.annotate(up=Count('votes_up')) \
-            .annotate(down=Count('votes_down')) \
-            .order_by(F('down') - F('up'), 'date')
+        queryset = queryset.order_by_votes_and_date()
         return queryset
 
 
-class DetailQuestion(DetailView, FormMixin, MultipleObjectMixin):
+class DetailQuestion(DetailView, FormMixin, PopularQuestionMixin):
     model = Question
     form_class = AnswerForm
     http_method_names = ['get', 'post']
