@@ -4,7 +4,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core import mail
 from django.db.models import F, Count, Q
 from django.shortcuts import render, redirect
-from django.urls import reverse
 from django.views import View
 from django.views.generic import CreateView, ListView, DetailView
 from django.views.generic.edit import FormMixin
@@ -14,7 +13,18 @@ from question_and_answer.forms import QuestionForm, AnswerForm
 from question_and_answer.models import Question, Tags, Answer
 
 
-class HomePageTemplate(ListView):
+class PopularQuestionMixin(MultipleObjectMixin):
+    max_popular_questions = 20
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        popular_questions = Question.objects.all().annotate(up=Count('votes_up')) \
+                       .annotate(down=Count('votes_down')) \
+                       .order_by(F('down') - F('up'), 'date')[:self.max_popular_questions]
+        context = {"popular_questions": popular_questions}
+        return super().get_context_data(**context)
+
+
+class HomePageTemplate(ListView, PopularQuestionMixin):
     model = Question
     template_name = 'index.html'
 

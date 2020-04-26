@@ -1,0 +1,15 @@
+{% for question in popular_questions %}
+<a href="{{question.get_absolute_url}}" class="popular-question m-2">
+    <div class="row">
+        <div class="col-1">
+            <span class="badge badge-success h5">{{question.votes}}</span>
+        </div>
+        <div class="col-10">
+            <span class="h5">
+                    {{question.title}}
+
+            </span>
+        </div>
+    </div>
+</a>
+{% endfor %}

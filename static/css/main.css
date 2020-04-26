@@ -1,7 +1,7 @@
 .question {
     border-bottom: 1px solid var(--gray);
     padding-bottom: 5px;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
 }
 .answer {
  border-bottom: 1px solid var(--gray);

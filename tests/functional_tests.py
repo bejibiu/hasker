@@ -112,6 +112,10 @@ class TestHomePage:
 
         assert browser.find_element_by_id('login_btn')
 
+    def test_page_has_popular_question(self, browser, question_30, home_page):
+        assert browser.find_element_by_class_name("popular-questions")
+        assert len(browser.find_elements_by_class_name('popular-question')) == 20
+
 
 class TestProfilePage:
     def test_profile_page_title(self, browser, profile_page):

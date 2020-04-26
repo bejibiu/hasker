@@ -16,10 +16,17 @@ def test_home_page_content(client, db):
         'trending'
     ]
 
-    res = res.content.decode()
+    content = res.content.decode()
 
     for element in elements_by_id_on_home_page:
-        assert element in res
+        assert element in content
+    assert 'popular_questions' in res.context_data.keys()
+
+
+def test_popular_max_20_question(client, db, question_30):
+    res = client.get('/')
+    popular_question = res.context_data['popular_questions']
+    assert len(popular_question) == 20
 
 
 def test_fail_ask_not_auth_client(client):
