@@ -46,8 +46,7 @@ class QuestionCreateView(CreateView):
             question = question_form.save(commit=False)
             question.author = request.user
             question.save()
-            tags = question_form.data['tags']
-            for tag in tags.split(',')[:question.max_tags]:
+            for tag in question_form.cleaned_data['tags']:
                 question.tags.add((Tags.objects.get_or_create(label=tag))[0])
             messages.success(self.request, 'Ask saved successfully')
             return redirect(question.get_absolute_url())
@@ -58,12 +57,13 @@ class SearchQuestion(ListView, PopularQuestionMixin):
     model = Question
     template_name = 'search.html'
     paginate_by = 20
+    tag_search_prefix = 'tag:'
 
     def get_queryset(self):
         queryset = super(SearchQuestion, self).get_queryset()
         query = self.request.GET.get('q')
-        if query.startswith('tag:'):
-            query = query[4:]
+        if query.startswith(self.tag_search_prefix):
+            query = query[len(self.tag_search_prefix):]
             queryset = queryset.filter(tags__label=query)
         else:
             queryset = queryset.filter(Q(title__icontains=query) | Q(text__icontains=query))
@@ -87,21 +87,21 @@ class DetailQuestion(DetailView, FormMixin, PopularQuestionMixin):
         return self.render_to_response(context)
 
     def post(self, request, pk):
+        self.object = self.get_object()
         form_answer = self.form_class(request.POST)
         if form_answer.is_valid():
             answer = form_answer.save(commit=False)
             answer.author = request.user
-            answer.question = Question.objects.get(pk=pk)
+            answer.question = self.object
             answer.save()
-            url = request.build_absolute_uri(answer.question.get_absolute_url())
+            url = request.build_absolute_uri(self.object.get_absolute_url())
             mail.send_mail('YOU GOT AN ANSWER',
                            f"Hi friend. For your question, added the answer\n Use this link to you\'r answer"
                            f" {url}",
                            settings.EMAIL_HOST_USER,
-                           [answer.question.author.email])
+                           [self.object.author.email])
             messages.success(self.request, 'Answer saved successfully')
-            return redirect(answer.question.get_absolute_url())
-        self.object = self.get_object()
+            return redirect(self.object.get_absolute_url())
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
 
