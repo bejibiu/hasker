@@ -25,10 +25,7 @@ SECRET_KEY = os.environ['SECRET_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
-if DEBUG:
-    ALLOWED_HOSTS = []
-else:
-    ALLOWED_HOSTS = ['hasker-simon.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = ['hasker-simon.herokuapp.com', '127.0.0.1']
 
 
 # Application definition
