@@ -46,9 +46,12 @@ class SearchQuestion(ListView):
     def get_queryset(self):
         queryset = super(SearchQuestion, self).get_queryset()
         query = self.request.GET.get('q')
-        queryset = queryset.filter(
-            Q(title__icontains=query) | Q(text__icontains=query)
-        ).annotate(up=Count('votes_up')) \
+        if query.startswith('tag:'):
+            query = query[4:]
+            queryset = queryset.filter(tags__label=query)
+        else:
+            queryset = queryset.filter(Q(title__icontains=query) | Q(text__icontains=query))
+        queryset = queryset.annotate(up=Count('votes_up')) \
             .annotate(down=Count('votes_down')) \
             .order_by(F('down') - F('up'), 'date')
         return queryset
@@ -105,7 +108,7 @@ class ChangeVotesClass(LoginRequiredMixin, View):
         question = Question.objects.get(pk=pk)
         handler = {"up": (question.votes_up, question.votes_down), "down": (question.votes_down, question.votes_up)}
         self.toggle_votes(*handler[votes_do])
-        return redirect(reverse('detail_question', args=pk))
+        return redirect(question.get_absolute_url())
 
 
 class ChangeVotesAnswerClass(LoginRequiredMixin, View):
@@ -128,7 +131,7 @@ class ChangeVotesAnswerClass(LoginRequiredMixin, View):
         answer = Answer.objects.get(pk=pk)
         handler = {"up": (answer.votes_up, answer.votes_down), "down": (answer.votes_down, answer.votes_up)}
         self.toggle_votes(pk_question, *handler[votes_do])
-        return redirect(reverse('detail_question', args=pk_question))
+        return redirect(answer.question.get_absolute_url())
 
 
 class ToggleAnswerRightClass(LoginRequiredMixin, View):
@@ -150,4 +153,4 @@ class ToggleAnswerRightClass(LoginRequiredMixin, View):
                 right_answer.save()
         answer.toggle_right()
         answer.save()
-        return redirect(reverse('detail_question', args=self.kwargs['pk_question']))
+        return redirect(answer.question.get_absolute_url())

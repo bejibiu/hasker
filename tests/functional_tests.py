@@ -252,3 +252,12 @@ class TestSearchPage:
         Question.objects.get(title="This unique 20 question").votes_up.add(user)
         browser.refresh()
         assert browser.find_element_by_link_text("This unique 20 question")
+
+    def test_get_by_tags(self, browser, question, tag, home_page):
+        browser.find_element_by_id('search-input').send_keys(f"tag:{tag.label}")
+        browser.find_element_by_id('search-btn').click()
+        assert browser.find_element_by_link_text("Title")
+
+    def test_click_on_tag_go_to_search(self, browser, question, tag, home_page):
+        browser.find_element_by_link_text(f"{tag.label}").click()
+        assert 'search' in browser.current_url

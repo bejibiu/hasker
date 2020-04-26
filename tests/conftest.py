@@ -3,7 +3,7 @@ from base64 import b64encode
 import pytest
 from django.contrib.auth.models import User
 
-from question_and_answer.models import Question, Answer
+from question_and_answer.models import Question, Answer, Tags
 
 
 @pytest.fixture
@@ -23,8 +23,16 @@ def authenticated_client(db, user):
 
 
 @pytest.fixture()
-def question(db, user):
+def tag(db):
+    tag = Tags.objects.create(label='first label')
+    yield tag
+    tag.delete()
+
+
+@pytest.fixture()
+def question(db, user, tag):
     question = Question.objects.create(title="Title", text="Text question", author=user)
+    question.tags.add(tag)
     yield question
     question.delete()
 

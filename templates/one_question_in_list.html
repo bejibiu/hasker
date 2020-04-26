@@ -11,9 +11,9 @@
                     <tr>
                         <td>
                             {% for tag in question.tags.all %}
-                            <span class="btn btn-success btn-sm btn-tag">
+                            <a class="btn btn-success btn-sm btn-tag" href="search?q=tag:{{tag.label}}">
                                 {{tag.label}}
-                            </span>
+                            </a>
                             {% endfor %}
                         </td>
                     </tr>

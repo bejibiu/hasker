@@ -117,4 +117,6 @@ def test_toggle_answer_right_after_set_another_answer_right(authenticated_client
     assert Answer.objects.get(pk=answer1.id).right is False
 
 
-
+def test_tags_search(client, question):
+    res = client.get(reverse('search_question'), {"q": f"tag:{question.tags.first().label}"})
+    assert res.context_data["object_list"].first() == question
