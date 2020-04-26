@@ -37,6 +37,9 @@
         {% endfor %}
         </div>
         <div class="col-2">
+            {% if object.author.account.avatar.name %}
+            <img class='avatar' src="{{ object.author.account.avatar.url }}" style="width:42px" />
+            {% endif %}
             {{object.author}}
         </div>
     </div>
@@ -101,6 +104,9 @@
         </div>
         <div class="row justify-content-between">
             <div class="col-2 offset-10">
+            {% if answer.author.account.avatar.name %}
+            <img class='avatar' src="{{ answer.author.account.avatar.url }}" style="width:42px" />
+            {% endif %}
                 {{answer.author}}
             </div>
         </div>

@@ -20,6 +20,9 @@
                 </table>
             </div>
             <div class="col-2">
+                {% if question.author.account.avatar.name %}
+                <img class='avatar' src="{{ question.author.account.avatar.url }}" style="width:42px" />
+                {% endif %}
                 {{question.author}}
 
             </div>
