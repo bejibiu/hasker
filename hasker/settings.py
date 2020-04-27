@@ -149,4 +149,4 @@ if SENTRY_DSN:
         release=os.environ.get('HEROKU_SLUG_COMMIT', '')
     )
 
-URL_PREFIX_TO_CHECK_SENTRY = os.environ.get('SENTRY_DSN')
+URL_PREFIX_TO_CHECK_SENTRY = os.environ.get('URL_PREFIX_TO_CHECK_SENTRY')
