@@ -148,3 +148,5 @@ if SENTRY_DSN:
         send_default_pii=True,
         release=os.environ.get('HEROKU_SLUG_COMMIT', '')
     )
+
+URL_PREFIX_TO_CHECK_SENTRY = os.environ.get('SENTRY_DSN')
