@@ -24,12 +24,13 @@ manage.py rnuserver
 ```
 
 To run test:
+-------------------
 * install selenium driver for firefox
-* tun pytest
+* run pytest
 ```shell script
 pytest -v
 ```
 
 Web demo
 ------------
-application will be available in page heroku bu url:  https://hasker-simon.herokuapp.co
+application will be available in page heroku by url:  https://hasker-simon.herokuapp.co
