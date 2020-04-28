@@ -223,3 +223,4 @@ db.sqlite3
 db.sqlite3-journal
 media
 # End of https://www.gitignore.io/api/venv,python,pycharm+all,visualstudiocode
+staticfiles
