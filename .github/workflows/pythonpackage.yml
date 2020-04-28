@@ -37,6 +37,7 @@ jobs:
     - name: Test with pytest
       env:
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        DJANGO_DEBUG: True
       run: |
         python manage.py migrate --noinput
         python manage.py collectstatic
