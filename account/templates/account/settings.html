@@ -6,7 +6,8 @@ Settings
 <h1 class="name-page">Settings</h1>
 
 
-<form class="form-horizontal" action="{% url 'account_settings' %}" enctype="multipart/form-data"  method="POST">{% csrf_token %}
+<form class="form-horizontal" action="{% url 'account_settings' %}"
+      enctype="multipart/form-data"  method="POST">{% csrf_token %}
     {% for field in user_form %}
      <div class="form-group row">
         <label for="id_{{ field.name }}" class="col-sm-2 col-form-label col-form-label-sm">
