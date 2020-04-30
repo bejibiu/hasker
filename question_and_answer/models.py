@@ -35,6 +35,9 @@ class Message(models.Model):
 class Tags(models.Model):
     label = models.CharField(max_length=SMALL_LENGTH, unique=True)
 
+    def __str__(self):
+        return self.label
+
 
 class Question(Message):
     max_tags = 3
@@ -47,6 +50,9 @@ class Question(Message):
 
     def get_absolute_url(self):
         return reverse('detail_question', args=[str(self.pk)])
+
+    def __str__(self):
+        return self.title
 
 
 class Answer(Message):
