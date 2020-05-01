@@ -7,22 +7,10 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import CreateView, ListView, DetailView
 from django.views.generic.edit import FormMixin
-from django.views.generic.list import MultipleObjectMixin
 
 from question_and_answer.forms import QuestionForm, AnswerForm
+from question_and_answer.mixin import PopularQuestionMixin
 from question_and_answer.models import Question, Tags, Answer
-
-
-class PopularQuestionMixin(MultipleObjectMixin):
-    max_popular_questions = 20
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        popular_questions = Question.objects.all().order_by_votes_and_date()[
-            : self.max_popular_questions
-        ]
-        context = {"popular_questions": popular_questions}
-        context.update(kwargs)
-        return super().get_context_data(**context)
 
 
 class HomePageTemplate(ListView, PopularQuestionMixin):
