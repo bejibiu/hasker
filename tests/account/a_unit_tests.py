@@ -20,7 +20,7 @@ def test_correct_resolve_account_settings():
 
 
 @pytest.mark.django_db
-def test_create_user_account_with_post(client, avatar):
+def test_create_user_account_with_avatar(client, avatar):
     data = {
         "email": "test@mail.com",
         "username": "test",
@@ -30,7 +30,7 @@ def test_create_user_account_with_post(client, avatar):
     }
 
     client.post(reverse('registration'), data=data)
-    user = User.objects.select_related('account').first
+    user = User.objects.select_related('account').first()
 
     assert User.objects.count() == 1
     assert user.account.avatar.name

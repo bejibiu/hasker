@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
@@ -14,7 +15,10 @@ class Account(models.Model):
     avatar = models.FileField(upload_to=user_directory_path, null=True)
     date_of_create = models.DateTimeField(auto_now_add=True)
 
-#     TODO: if update avatar. delete old avatar.
+    def get_url_avatar(self):
+        if self.avatar.name:
+            return f"{settings.MEDIA_URL}{self.avatar.name}"
+        return f"{settings.STATIC_URL}img/default_user_icon.jpg"
 
 
 @receiver(post_save, sender=User)

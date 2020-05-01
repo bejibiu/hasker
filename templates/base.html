@@ -35,9 +35,7 @@
         </div>
         <div id="user_block">
             {% if user.is_authenticated %}
-            {% if user.account.avatar.name %}
-            <img class='avatar' src="{{ user.account.avatar.url }}" style="width:42px" />
-            {% endif %}
+            <img class='avatar' src="{{ user.account.get_url_avatar }}" style="width:42px" />
             <a class="btn btn-outline-success" href="{% url 'account_settings' %}" id="profile">{{user.username}}</a>
             <a class="btn btn-outline-success" href="{% url 'logout' %}" id="logout">Log out</a>
             {% else %}
