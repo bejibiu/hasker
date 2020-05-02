@@ -1,4 +1,6 @@
+import datetime
 from base64 import b64encode
+from datetime import timedelta
 
 import pytest
 from django.contrib.auth.models import User
@@ -54,9 +56,12 @@ def answers_two_page(db, user, question):
 
 @pytest.fixture()
 def question_30(db, user):
+
     q = []
     for num in range(30):
+        create_date = datetime.datetime.now() - timedelta(days=100 - num)
         q.append(Question.objects.create(title=f"This unique {num} question",
                                          text=b64encode(f'This unique text {num}'.encode()),
-                                         author=user))
+                                         author=user, date=create_date
+                                         ))
     return q

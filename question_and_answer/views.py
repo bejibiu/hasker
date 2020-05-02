@@ -2,11 +2,12 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core import mail
+from django.db import transaction
 from django.db.models import F, Count, Q
 from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import CreateView, ListView, DetailView
-from django.views.generic.edit import FormMixin
+from django.views.generic.edit import FormMixin, ProcessFormView
 
 from question_and_answer.forms import QuestionForm, AnswerForm
 from question_and_answer.mixin import PopularQuestionMixin
@@ -33,18 +34,19 @@ class QuestionCreateView(CreateView):
     model = Question
     form_class = QuestionForm
 
-    def post(self, request, *args, **kwargs):
-        question_form = self.form_class(request.POST)
+    @transaction.atomic
+    def form_valid(self, form):
+        question = form.save(commit=False)
+        question.author = self.request.user
+        question.save()
 
-        if question_form.is_valid():
-            question = question_form.save(commit=False)
-            question.author = request.user
-            question.save()
-            for tag in question_form.cleaned_data["tags"]:
-                question.tags.add((Tags.objects.get_or_create(label=tag))[0])
-            messages.success(self.request, "Ask saved successfully")
-            return redirect(question.get_absolute_url())
-        return render(request, "index.html", {"question_form": question_form})
+        for tag in form.cleaned_data["tags"]:
+            question.tags.add((Tags.objects.get_or_create(label=tag))[0])
+        messages.success(self.request, "Ask saved successfully")
+        return redirect(question.get_absolute_url())
+
+    def form_invalid(self, form):
+        return render(self.request, "index.html", {"question_form": form})
 
 
 class SearchQuestion(ListView, PopularQuestionMixin):
@@ -67,7 +69,7 @@ class SearchQuestion(ListView, PopularQuestionMixin):
         return queryset
 
 
-class DetailQuestion(DetailView, FormMixin, PopularQuestionMixin):
+class DetailQuestion(DetailView, FormMixin, PopularQuestionMixin, ProcessFormView):
     model = Question
     form_class = AnswerForm
     http_method_names = ["get", "post"]
@@ -77,33 +79,33 @@ class DetailQuestion(DetailView, FormMixin, PopularQuestionMixin):
         self.object = self.get_object()
         self.object_list = (
             self.object.answer_set.all()
-            .annotate(up=Count("votes_up"))
-            .annotate(down=Count("votes_down"))
-            .order_by("-correct", F("down") - F("up"), "date")
+                .annotate(up=Count("votes_up"))
+                .annotate(down=Count("votes_down"))
+                .order_by("-correct", F("down") - F("up"), "date")
         )
         context = self.get_context_data(
             object=self.object, object_list=self.object_list
         )
         return self.render_to_response(context)
 
-    def post(self, request, pk):
+    def form_valid(self, form):
         self.object = self.get_object()
-        form_answer = self.form_class(request.POST)
-        if form_answer.is_valid():
-            answer = form_answer.save(commit=False)
-            answer.author = request.user
-            answer.question = self.object
-            answer.save()
-            url = request.build_absolute_uri(self.object.get_absolute_url())
-            mail.send_mail(
-                "YOU GOT AN ANSWER",
-                f"Hi friend. For your question, added the answer\n Use this link to you'r answer"
-                f" {url}",
-                settings.EMAIL_HOST_USER,
-                [self.object.author.email],
-            )
-            messages.success(self.request, "Answer saved successfully")
-            return redirect(self.object.get_absolute_url())
+        answer = form.save(commit=False)
+        answer.author = self.request.user
+        answer.question = self.object
+        answer.save()
+        url = self.request.build_absolute_uri(self.object.get_absolute_url())
+        mail.send_mail(
+            "YOU GOT AN ANSWER",
+            f"Hi friend. For your question, added the answer\n Use this link to you'r answer"
+            f" {url}",
+            settings.EMAIL_HOST_USER,
+            [self.object.author.email],
+        )
+        messages.success(self.request, "Answer saved successfully")
+        return redirect(self.object.get_absolute_url())
+
+    def form_invalid(self, form):
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
 
