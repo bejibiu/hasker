@@ -88,6 +88,7 @@ class DetailQuestion(DetailView, FormMixin, PopularQuestionMixin, ProcessFormVie
         )
         return self.render_to_response(context)
 
+    @transaction.atomic
     def form_valid(self, form):
         self.object = self.get_object()
         answer = form.save(commit=False)
@@ -116,6 +117,7 @@ class ChangeVotesClass(LoginRequiredMixin, View):
         "get",
     ]
 
+    @transaction.atomic
     def toggle_votes(self, selected_list_voted, another_list_voted):
         if self.request.user in selected_list_voted.all():
             selected_list_voted.remove(self.request.user)
@@ -140,6 +142,7 @@ class ChangeVotesAnswerClass(LoginRequiredMixin, View):
         "get",
     ]
 
+    @transaction.atomic
     def toggle_votes(self, pk_question, selected_list_voted, another_list_voted):
         if self.request.user in selected_list_voted.all():
             selected_list_voted.remove(self.request.user)
