@@ -4,22 +4,51 @@ from django.urls import reverse
 from question_and_answer.models import Question, Tags, Answer
 
 
-def test_home_page_content(client, db):
+def test_home_page_content_logo(client, db):
     res = client.get("/")
-    elements_by_id_on_home_page = [
-        "logo",
-        "search",
-        "user_block",
-        "login",
-        "sign_up",
-        "list_question",
-        "trending",
-    ]
-
     content = res.content.decode()
+    assert "logo" in content
 
-    for element in elements_by_id_on_home_page:
-        assert element in content
+
+def test_home_page_content_search(client, db):
+    res = client.get("/")
+    content = res.content.decode()
+    assert "search" in content
+
+
+def test_home_page_content_user_block(client, db):
+    res = client.get("/")
+    content = res.content.decode()
+    assert "user_block" in content
+
+
+def test_home_page_content_login(client, db):
+    res = client.get("/")
+    content = res.content.decode()
+    assert "login" in content
+
+
+def test_home_page_content_sign_up(client, db):
+    res = client.get("/")
+    content = res.content.decode()
+    assert "sign_up" in content
+
+
+def test_home_page_content_list_question(client, db):
+    res = client.get("/")
+    content = res.content.decode()
+    assert "list_question" in content
+
+
+def test_home_page_content_trending(client, db):
+    res = client.get("/")
+    content = res.content.decode()
+    assert "trending" in content
+
+
+def test_home_page_content_popular_questions(client, db):
+    res = client.get("/")
+    content = res.content.decode()
     assert "popular_questions" in res.context_data.keys()
 
 
@@ -36,10 +65,8 @@ class TestQuestionCase:
 
     def test_save_question_without_tags(self, authenticated_client):
         data = {"title": "Title for message", "text": "is that a question?", "tags": ""}
-        res = authenticated_client.post(reverse("save_question"), data)
-        assert Question.objects.all().count() == 1
+        authenticated_client.post(reverse("save_question"), data)
         assert Question.objects.first().title == data["title"]
-        assert res.status_code == 302
 
     def test_save_question_with_tags(self, authenticated_client):
         data = {"title": "Title for message", "text": "is that a question?", "tags": "1,2"}
