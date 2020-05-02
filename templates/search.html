@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Search hasker{% endblock %}
+{% block title %}{{ block.super}} - Search {% endblock %}
 {% block content %}
-    <h2>Search result</h2>
-    <div class="list-question" id="list_question">
+<h2>Search result</h2>
+<div class="list-question" id="list_question">
     {% for question in object_list %}
-        {% include 'one_question_in_list.html' %}
+    {% include 'one_question_in_list.html' %}
     {% empty %}
-        <li>No question</li>
+    <div>No question</div>
     {% endfor %}
-    </div>
+</div>
 {% include 'paginator.html' %}
 
 {%endblock%}

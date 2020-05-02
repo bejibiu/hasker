@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Hasker{% endblock %}
 {% block content %}
 <div class="row">
     <div class="col-6"><a href="/?sorted=date" id="sorted-by-date" class="h2 ">New Question</a></div>
@@ -10,7 +9,7 @@
     {% for question in object_list %}
         {% include 'one_question_in_list.html' %}
     {% empty %}
-        <li>No question</li>
+        <div>No question</div>
     {% endfor %}
     </div>
 {% include 'paginator.html' %}
