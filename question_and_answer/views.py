@@ -8,10 +8,12 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import CreateView, ListView, DetailView
 from django.views.generic.edit import FormMixin, ProcessFormView
+from rest_framework import viewsets
 
 from question_and_answer.forms import QuestionForm, AnswerForm
 from question_and_answer.mixin import PopularQuestionMixin
 from question_and_answer.models import Question, Tags, Answer
+from question_and_answer.serializer import QuestionSerializer, PopularQuestionSerializer
 
 
 class HomePageTemplate(ListView, PopularQuestionMixin):
@@ -59,7 +61,7 @@ class SearchQuestion(ListView, PopularQuestionMixin):
         queryset = super(SearchQuestion, self).get_queryset()
         query = self.request.GET.get("q")
         if query.startswith(self.tag_search_prefix):
-            query = query[len(self.tag_search_prefix) :]
+            query = query[len(self.tag_search_prefix):]
             queryset = queryset.filter(tags__label=query)
         else:
             queryset = queryset.filter(
@@ -150,14 +152,14 @@ class ChangeVotesAnswerClass(LoginRequiredMixin, View):
         [
             answer.votes_down.remove(self.request.user)
             for answer in Answer.objects.filter(question_id=pk_question).filter(
-                votes_down=self.request.user
-            )
+            votes_down=self.request.user
+        )
         ]
         [
             answer.votes_up.remove(self.request.user)
             for answer in Answer.objects.filter(question_id=pk_question).filter(
-                votes_up=self.request.user
-            )
+            votes_up=self.request.user
+        )
         ]
         selected_list_voted.add(self.request.user)
         if self.request.user in another_list_voted.all():
@@ -190,10 +192,34 @@ class ToggleAnswerCorrectClass(LoginRequiredMixin, View):
         answer = Answer.objects.get(pk=pk)
         if answer.correct is False:
             for correct_answer in Answer.objects.filter(question_id=pk_question).filter(
-                correct=True
+                    correct=True
             ):
                 correct_answer.toggle_correct()
                 correct_answer.save()
         answer.toggle_correct()
         answer.save()
         return redirect(answer.question.get_absolute_url())
+
+
+class QuestionViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that question index with trends.
+    """
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+
+
+class IndexListViewSet(viewsets.ModelViewSet):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+    max_popular_questions = 20
+    popular_serializer = PopularQuestionSerializer
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, args, kwargs)
+        popular_questions_queryset = Question.objects.all().order_by_votes_and_date()[
+                                     : self.max_popular_questions
+                                     ]
+        serialize = self.popular_serializer(popular_questions_queryset, many=True)
+        response.data["popular_questions"] = serialize.data
+        return response

@@ -4,6 +4,7 @@ from datetime import timedelta
 
 import pytest
 from django.contrib.auth.models import User
+from rest_framework.test import APIClient
 
 from question_and_answer.models import Question, Answer, Tags
 
@@ -56,7 +57,6 @@ def answers_two_page(db, user, question):
 
 @pytest.fixture()
 def question_30(db, user):
-
     q = []
     for num in range(30):
         create_date = datetime.datetime.now() - timedelta(days=100 - num)
@@ -65,3 +65,8 @@ def question_30(db, user):
                                          author=user, date=create_date
                                          ))
     return q
+
+
+@pytest.fixture
+def rest_client():
+    return APIClient()

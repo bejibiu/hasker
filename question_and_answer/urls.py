@@ -1,4 +1,5 @@
-from django.urls import path, re_path
+from django.urls import path, re_path, include
+from rest_framework import routers
 
 from .views import (
     HomePageTemplate,
@@ -7,8 +8,12 @@ from .views import (
     ChangeVotesAnswerClass,
     DetailQuestion,
     SearchQuestion,
-    ToggleAnswerCorrectClass,
+    ToggleAnswerCorrectClass, QuestionViewSet, IndexListViewSet,
 )
+
+router = routers.SimpleRouter()
+router.register('questions', QuestionViewSet)
+router.register('index', IndexListViewSet)
 
 urlpatterns = [
     path("", HomePageTemplate.as_view(), name="home"),
@@ -30,4 +35,5 @@ urlpatterns = [
     ),
     path("question/<int:pk>/", DetailQuestion.as_view(), name="detail_question"),
     path("search", SearchQuestion.as_view(), name="search_question"),
+    path("api/v1/", include(router.urls)),
 ]
