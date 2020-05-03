@@ -1,17 +1,8 @@
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path, include, re_path
+from django.urls import path, include
 
 from hasker import settings
-from question_and_answer.views import (
-    HomePageTemplate,
-    QuestionCreateView,
-    DetailQuestion,
-    ChangeVotesClass,
-    ChangeVotesAnswerClass,
-    ToggleAnswerCorrectClass,
-    SearchQuestion,
-)
 
 urlpatterns = [
     path("account/", include("account.urls")),

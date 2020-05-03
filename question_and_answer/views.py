@@ -9,11 +9,13 @@ from django.views import View
 from django.views.generic import CreateView, ListView, DetailView
 from django.views.generic.edit import FormMixin, ProcessFormView
 from rest_framework import viewsets, filters
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 from question_and_answer.forms import QuestionForm, AnswerForm
 from question_and_answer.mixin import PopularQuestionMixin
 from question_and_answer.models import Question, Tags, Answer
-from question_and_answer.serializer import QuestionSerializer, PopularQuestionSerializer
+from question_and_answer.serializer import QuestionSerializer, PopularQuestionSerializer, AnswerSerializer
 
 
 class HomePageTemplate(ListView, PopularQuestionMixin):
@@ -209,6 +211,16 @@ class QuestionViewSet(viewsets.ModelViewSet):
     serializer_class = QuestionSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['title', 'text']
+
+    def get_queryset(self):
+        queryset = super(QuestionViewSet, self).get_queryset()
+        return queryset.prefetch_related('answer_set')
+
+    @action(methods=['GET'], detail=True, )
+    def answers(self, request, pk):
+        question = self.get_object()
+        serializer = AnswerSerializer(question.answer_set, many=True)
+        return Response(serializer.data)
 
 
 class IndexListViewSet(viewsets.ModelViewSet):

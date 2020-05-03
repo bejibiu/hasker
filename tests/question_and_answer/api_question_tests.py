@@ -22,3 +22,11 @@ class TestQuestionApi:
     def test_search_question_not_exist_title(self, rest_client, question, api_question_path):
         res = rest_client.get(api_question_path + f"?search={question.title}+Notexists")
         assert res.data['count'] == 0
+
+
+class TestAnswerApiCase:
+    def test_all_answer_by_question(self, rest_client, answers, api_question_path):
+        question_id = answers[0].question.id
+
+        res = rest_client.get(api_question_path + f'{question_id}/answers/')
+        assert len(res.data) == len(answers)
