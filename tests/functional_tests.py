@@ -1,5 +1,5 @@
+import json
 import re
-import time
 from base64 import b64decode
 
 from django.core import mail
@@ -89,8 +89,8 @@ class TestHomePage:
         browser.find_element_by_name("avatar").send_keys(avatar_img.strpath)
         browser.find_element_by_name("send_signup_form").click()
         assert (
-            "success sign up"
-            in browser.find_element_by_class_name("alert-success").text
+                "success sign up"
+                in browser.find_element_by_class_name("alert-success").text
         )
         ### After sign up user already login and see button logout
         assert "new_login" == browser.find_element_by_id("profile").text
@@ -132,7 +132,7 @@ class TestProfilePage:
         browser.find_element_by_name("email").send_keys("newemail@test.com")
         browser.find_element_by_id("send_settings_form_btn").click()
         assert (
-            "Success update" in browser.find_element_by_class_name("alert-success").text
+                "Success update" in browser.find_element_by_class_name("alert-success").text
         )
 
 
@@ -151,8 +151,8 @@ class TestHomePageQuestion:
         browser.find_element_by_name("send_ask_btn").click()
 
         assert (
-            "Ask saved successfully"
-            in browser.find_element_by_class_name("alert-success").text
+                "Ask saved successfully"
+                in browser.find_element_by_class_name("alert-success").text
         )
         browser.find_element_by_class_name("question").click()
         assert "/question/" in browser.current_url
@@ -184,8 +184,8 @@ class TestQuestionAndAnswer:
         browser.find_element_by_name("text").send_keys("this is answer")
         browser.find_element_by_id("send_answer_btn").click()
         assert (
-            "Answer saved successfully"
-            in browser.find_element_by_class_name("alert-success").text
+                "Answer saved successfully"
+                in browser.find_element_by_class_name("alert-success").text
         )
         browser.find_element_by_class_name("answer")
         email = mail.outbox[0]
@@ -229,7 +229,7 @@ class TestQuestionAndAnswer:
         assert browser.find_element_by_class_name("correct-answer")
 
     def test_set_all_answer_as_correct(
-        self, browser, auth_session, answers, question_page
+            self, browser, auth_session, answers, question_page
     ):
         with pytest.raises(NoSuchElementException):
             browser.find_element_by_class_name("correct-answer")
@@ -253,17 +253,16 @@ class TestSearchPage:
         assert "No question" in browser.find_element_by_id("list_question").text
 
     def test_search_question(self, browser, question_30, home_page):
-
         browser.find_element_by_id("search-input").send_keys(f"{question_30[-1].text}")
         browser.find_element_by_id("search-btn").click()
         assert "search?q=" in browser.current_url
         assert (
-            f"{question_30[-1].title}"
-            in browser.find_element_by_id("list_question").text
+                f"{question_30[-1].title}"
+                in browser.find_element_by_id("list_question").text
         )
         assert (
-            f"{question_30[-2].title}"
-            not in browser.find_element_by_id("list_question").text
+                f"{question_30[-2].title}"
+                not in browser.find_element_by_id("list_question").text
         )
 
     def test_paginate_search_result(self, browser, question_30, home_page):
@@ -292,3 +291,13 @@ class TestSearchPage:
         browser.find_element_by_link_text(f"{tag.label}").click()
         assert "search" in browser.current_url
 
+
+class TestQuestionCase:
+    def test_index_include_question(self, question, rest_client):
+        res = rest_client.get('/api/v1/questions/')
+        assert res.status_code == 200
+
+    def test_index_include_trends(self, question, rest_client):
+        res = rest_client.get('/api/v1/index/')
+        res = json.loads(res.content)
+        assert 'popular_questions' in res.keys()
