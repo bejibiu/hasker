@@ -10,6 +10,8 @@ from selenium.common.exceptions import NoSuchElementException
 
 from question_and_answer.models import Question
 
+def run_in_CI():
+    return bool(os.environ.get("CI_ENVIRON", False))
 
 @pytest.fixture(scope="session")
 def browser():
@@ -72,7 +74,7 @@ def logout(browser):
         pass
 
 
-@pytest.mark.skipif(os.environ.get("CI_ENVIRON", False), reason="Run in CI")
+@pytest.mark.skipif(run_in_CI(), reason="Run in CI")
 class TestHomePage:
     def test_home_page_title(self, browser: webdriver.Firefox, home_page):
         assert "Hasker" in browser.title
@@ -124,7 +126,7 @@ class TestHomePage:
         assert len(browser.find_elements_by_class_name("popular-question")) == 20
 
 
-@pytest.mark.skipif(os.environ.get("CI_ENVIRON", False), reason="Run in CI")
+@pytest.mark.skipif(run_in_CI(), reason="Run in CI")
 class TestProfilePage:
     def test_profile_page_title(self, browser, profile_page):
         assert "Settings" in browser.title
@@ -139,7 +141,7 @@ class TestProfilePage:
         )
 
 
-@pytest.mark.skipif(os.environ.get("CI_ENVIRON", False), reason="Run in CI")
+@pytest.mark.skipif(run_in_CI(), reason="Run in CI")
 class TestHomePageQuestion:
     def test_not_available_button_ask_if_user_not_auth(self, browser, home_page, user):
         with pytest.raises(NoSuchElementException):
@@ -177,7 +179,7 @@ class TestHomePageQuestion:
             browser.find_element_by_link_text("This unique 1 question")
 
 
-@pytest.mark.skipif(os.environ.get("CI_ENVIRON", False), reason="Run in CI")
+@pytest.mark.skipif(run_in_CI(), reason="Run in CI")
 class TestQuestionAndAnswer:
     def test_not_form_for_not_auth_client(self, browser, user, client, question_page):
         with pytest.raises(NoSuchElementException):
@@ -250,7 +252,7 @@ class TestQuestionAndAnswer:
         assert "?page=2" in browser.current_url
 
 
-@pytest.mark.skipif(os.environ.get("CI_ENVIRON", False), reason="Run in CI")
+@pytest.mark.skipif(run_in_CI(), reason="Run in CI")
 class TestSearchPage:
     def test_empty_search_result(self, browser, home_page):
         browser.find_element_by_id("search-input").send_keys("_NoResult")
@@ -298,7 +300,7 @@ class TestSearchPage:
         assert "search" in browser.current_url
 
 
-@pytest.mark.skipif(os.environ.get("CI_ENVIRON", False), reason="Run in CI")
+@pytest.mark.skipif(run_in_CI(), reason="Run in CI")
 class TestQuestionCase:
     def test_index_include_question(self, question, rest_client):
         res = rest_client.get('/api/v1/questions/')
