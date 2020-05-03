@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import CreateView, ListView, DetailView
 from django.views.generic.edit import FormMixin, ProcessFormView
-from rest_framework import viewsets
+from rest_framework import viewsets, filters
 
 from question_and_answer.forms import QuestionForm, AnswerForm
 from question_and_answer.mixin import PopularQuestionMixin
@@ -207,6 +207,8 @@ class QuestionViewSet(viewsets.ModelViewSet):
     """
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['title', 'text']
 
 
 class IndexListViewSet(viewsets.ModelViewSet):
