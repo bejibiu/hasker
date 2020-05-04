@@ -70,3 +70,9 @@ def question_30(db, user):
 @pytest.fixture
 def rest_client():
     return APIClient()
+
+
+@pytest.fixture
+def rest_auth_client(rest_client, user):
+    rest_client.force_authenticate(user=user)
+    return rest_client
