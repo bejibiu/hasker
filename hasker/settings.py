@@ -18,6 +18,7 @@ INSTALLED_APPS = [
     "question_and_answer",
     "account",
     "rest_framework",
+    'drf_yasg',
 ]
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -68,7 +69,10 @@ AUTH_PASSWORD_VALIDATORS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 20
+    'PAGE_SIZE': 20,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
 }
 
 LANGUAGE_CODE = "en-us"

@@ -3,6 +3,7 @@ import os
 import re
 from base64 import b64decode
 
+import requests
 from django.core import mail
 from selenium import webdriver
 import pytest
@@ -10,8 +11,22 @@ from selenium.common.exceptions import NoSuchElementException
 
 from question_and_answer.models import Question
 
+
 def run_in_CI():
     return bool(os.environ.get("CI_ENVIRON", False))
+
+
+@pytest.fixture()
+def api_scheme(live_server):
+    return live_server.url + '/api/v1/'
+
+
+@pytest.fixture()
+def access_token_header(api_scheme, user):
+    auth_token = requests.post(f'{api_scheme}token/', data={"username": user.username,
+                                                            "password": "very_Strong_password!@# Z"}).json()
+    return {"Authorization": f"Bearer {auth_token['access']}"}
+
 
 @pytest.fixture(scope="session")
 def browser():
@@ -302,11 +317,15 @@ class TestSearchPage:
 
 @pytest.mark.skipif(run_in_CI(), reason="Run in CI")
 class TestQuestionCase:
-    def test_index_include_question(self, question, rest_client):
-        res = rest_client.get('/api/v1/questions/')
+    def test_index_include_question(self, user, api_scheme, question):
+        res = requests.get(f'{api_scheme}questions/')
+        assert res.status_code == 401
+        auth_token = requests.post(f'{api_scheme}token/', data={"username": user.username,
+                                                                "password": "very_Strong_password!@# Z"}).json()
+        res = requests.get(f'{api_scheme}questions/', headers={"Authorization": f"Bearer {auth_token['access']}"})
         assert res.status_code == 200
 
-    def test_index_include_trends(self, question, rest_client):
-        res = rest_client.get('/api/v1/index/')
+    def test_index_include_trends(self, live_server, question, rest_client, access_token_header):
+        res = rest_client.get('/api/v1/index/', headers=access_token_header)
         res = json.loads(res.content)
         assert 'popular_questions' in res.keys()

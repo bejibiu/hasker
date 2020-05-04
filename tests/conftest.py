@@ -10,7 +10,7 @@ from question_and_answer.models import Question, Answer, Tags
 
 
 @pytest.fixture
-def user():
+def user(db):
     user = User.objects.create_user('username', password='very_Strong_password!@# Z', email="testemail@emai.com")
     yield user
     user.delete()

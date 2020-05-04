@@ -10,6 +10,7 @@ from django.views.generic import CreateView, ListView, DetailView
 from django.views.generic.edit import FormMixin, ProcessFormView
 from rest_framework import viewsets, filters
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from question_and_answer.forms import QuestionForm, AnswerForm
@@ -211,6 +212,7 @@ class QuestionViewSet(viewsets.ModelViewSet):
     serializer_class = QuestionSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['title', 'text']
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = super(QuestionViewSet, self).get_queryset()
@@ -228,6 +230,7 @@ class IndexListViewSet(viewsets.ModelViewSet):
     serializer_class = QuestionSerializer
     max_popular_questions = 20
     popular_serializer = PopularQuestionSerializer
+    permission_classes = [IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
         response = super().list(request, args, kwargs)
