@@ -204,7 +204,7 @@ class ToggleAnswerCorrectClass(LoginRequiredMixin, View):
         return redirect(answer.question.get_absolute_url())
 
 
-class QuestionViewSet(viewsets.ModelViewSet):
+class QuestionViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that question index with trends.
     """
@@ -225,7 +225,7 @@ class QuestionViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-class IndexListViewSet(viewsets.ModelViewSet):
+class IndexListViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
     max_popular_questions = 20
