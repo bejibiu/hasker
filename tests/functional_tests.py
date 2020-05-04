@@ -319,13 +319,13 @@ class TestSearchPage:
 class TestQuestionCase:
     def test_index_include_question(self, user, api_scheme, question):
         res = requests.get(f'{api_scheme}questions/')
-        assert res.status_code == 401
+        assert res.status_code == 403
         auth_token = requests.post(f'{api_scheme}token/', data={"username": user.username,
                                                                 "password": "very_Strong_password!@# Z"}).json()
         res = requests.get(f'{api_scheme}questions/', headers={"Authorization": f"Bearer {auth_token['access']}"})
         assert res.status_code == 200
 
-    def test_index_include_trends(self, live_server, question, rest_client, access_token_header):
-        res = rest_client.get('/api/v1/index/', headers=access_token_header)
+    def test_index_include_trends(self, live_server, question, rest_auth_client, access_token_header):
+        res = rest_auth_client.get('/api/v1/index/', headers=access_token_header)
         res = json.loads(res.content)
         assert 'popular_questions' in res.keys()
